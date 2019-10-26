@@ -9,10 +9,9 @@ include 'functions.php';
 	<script src="../js/jquery-3.4.1.min.js"></script>
 	
 	<script src="../js/jquery-ui.min.js"></script>
-	<link href="../css/jquery-ui.min.css" rel="stylesheet">
 
-	<script src="../js/bootstrap.min.js"></script>
-	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<script src="../js/bootstrap.js"></script>
+	<link href="../css/bootstrap.css" rel="stylesheet">
 
 	<link href="../css/style.css" rel="stylesheet">
 
