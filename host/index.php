@@ -24,6 +24,7 @@
 		<table id="playerList" hidden="hidden"></table>
 		<div id="controls">
 			<input type="button" id="startGame" value="START" hidden="hidden" />
+			<input type="button" id="endRound" value="Score round" hidden="hidden" />
 			<input type="button" id="cancelRound" value="Cancel round" hidden="hidden" />
 			<input type="button" id="reopen" value="Reopen room" hidden="hidden" />
 			<input type="button" id="CrashButton" value="Crash" hidden="hidden" />

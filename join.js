@@ -18,6 +18,8 @@ function reset(timeout) {
 	$("#guess").hide();
 	$("#startRound").hide();
 	$("#cancelRound").hide();
+	$("#endRound").hide();
+	
 	$("#wait").hide();
 	$("#joinRoomCode").text("");
 	
@@ -127,6 +129,7 @@ function onCommand(command, params) {
 		case 'guess':
 			$("#yesNo").hide();
 			
+			$('#guess').empty();
 			var playerCount = parseInt(params[0]);
 			for(var i = 0; i <= playerCount; i++) {
 				$("#guess").append($("<input class='guessNumber' type='button' value='" + i + "' />"));
@@ -147,11 +150,18 @@ function onCommand(command, params) {
 			$("#score").show();
 			if(session.ruler){
 				$("#cancelRound").hide();
+				$("#endRound").hide();
 			}
 			break;
 		case 'readyForNewRound': 
 			if(session.ruler){
 				$("#startRound").show();
+			}
+			break;
+		case 'collectionDone':
+			if(session.ruler){
+				$("#endRound").show();
+				$("#cancelRound").hide();
 			}
 			break;
 		case 'bye': 
@@ -247,6 +257,9 @@ $(document).ready(function() {
 		session.ws.send("rulerInfo:start");
 	});
 	
+	$("#endRound").click(function() {
+		session.ws.send("endround");
+	});	
 	
 	$("#cancelRound").click(function() {
 		session.ws.send("cancelRound");

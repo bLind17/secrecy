@@ -35,6 +35,7 @@
 		<div id="controls">
 			<input type="button" id="startRound" value="START" hidden="hidden" />
 			<input type="button" id="cancelRound" value="Cancel round" hidden="hidden" />
+			<input type="button" id="endRound" value="Score round" hidden="hidden" />
 		</div>
 	</div>
  

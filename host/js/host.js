@@ -18,6 +18,7 @@ function reset(timeout, autoRoom = true) {
 	$("#playerList").hide();
 	$("#reopen").hide();
 	$("#cancelRound").hide();
+	$("#endRound").hide();
 	
 	buildPlayerList();
 	
@@ -153,12 +154,13 @@ function onCommand(command, params) {
 			updatePlayerScore(params[0], parseInt(params[1]), parseInt(params[2]));
 			break;
 		case 'roundEnd':
-			$("#cancelRound").hide();
+			$("#endRound").hide();
 			break;
 		case 'readyForNewRound': 
 			buildPlayerList();
 			$("#startGame").show();
 			$("#reopen").show();
+			$("#endRound").hide();
 			break;
 		case 'exhausted':	
 			showDialog("I am sorry!", "Someone is creating too many rooms. Please try again shortly!");	
@@ -177,6 +179,10 @@ function onCommand(command, params) {
 			$("#cancelRound").hide();
 			$("#reopen").show();
 			hideAllCheckMarks();
+			break;
+		case 'collectionDone':
+			$("#endRound").show();
+			$("#cancelRound").hide();
 			break;
 	}
 }
@@ -271,6 +277,10 @@ $(document).ready(function() {
 	
 	$("#CrashButton").click(function() {
 		session.ws.send("pleaseCrash");
+	});
+	
+	$("#endRound").click(function() {
+		session.ws.send("endround");
 	});
 	
 	$("#reopen").click(function() {		
