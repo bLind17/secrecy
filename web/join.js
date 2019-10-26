@@ -26,7 +26,8 @@ function reset(timeout) {
 	$("#roomCode").hide();
 	
 	setTimeout(function () {
-		var connection = new WebSocket('wss://der.lukaslipp.at/games/secrecyws:1338', ['soap', 'xmpp']);
+		var url = settings['protocol'] + "://" + settings['host'] + ":" + settings['port'];
+		var connection = new WebSocket(url, ['soap', 'xmpp']);
 		session.ws = connection;
 		
 		connection.onopen = function () {

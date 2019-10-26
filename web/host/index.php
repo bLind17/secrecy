@@ -1,26 +1,30 @@
 <?php 
+include 'functions.php';  
+?> 
 
-?>
 <html>
 <head>
 <title>Welcome to Secrecy!</title>
 	<meta charset="utf-8">
-
-	<link href="https://der.lukaslipp.at/common/jquery/jquery-ui.min.css" rel="stylesheet">
-	<link href="./style.css" rel="stylesheet">
-	<script src="https://der.lukaslipp.at/common/jquery/external/jquery/jquery.js"></script>
-	<script src="https://der.lukaslipp.at/common/jquery/jquery-ui.min.js"></script>
-	<script src="./fontawesome.js"></script>
-	<script src="./js/host.js"></script>
+	<script src="../js/jquery-3.4.1.min.js"></script>
 	
-	<script>
-		
-	</script>
+	<script src="../js/jquery-ui.min.js"></script>
+	<link href="../css/jquery-ui.min.css" rel="stylesheet">
+
+	<script src="../js/bootstrap.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="../css/style.css" rel="stylesheet">
+
+	<script src="../js/fontawesome.js"></script>
+	<script src="./js/host.js"></script>
+	<script src="../settings.js"></script>
+	
 </head>
 <body>
 	<div id="content">
 		<div id="roomCode"></div>
-		<div id="roomCodeInformation">Go to <a href="https://games.lukaslipp.at/secrecy">games.lukaslipp.at/secrecy</a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+		<div id="roomCodeInformation">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 		<table id="playerList" hidden="hidden"></table>
 		<div id="controls">
 			<input type="button" id="startGame" value="START" hidden="hidden" />

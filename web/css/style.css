@@ -1,0 +1,75 @@
+#content {
+	width: 80%;
+	margin: auto;
+	
+	height: 95vh;
+	overflow: auto;
+	
+	text-align: center;
+	font-family: sans-serif;
+	
+	background-color: #996abd;
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	box-sizing: border-box;
+}
+
+#roomCode {
+	font-size: 250%;
+	font-weight: bold;
+	color: white;
+	margin-bottom: 20px;
+}
+
+#playerList > .player {
+	color: white;
+	padding: 10px;
+}
+
+#login {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+
+}
+
+#score {
+	font-size: 150%;
+}
+
+#pointsGame, #pointsQuestion {
+	color: white;
+}
+
+input {
+	font-size: 200%;
+	padding: 20px;
+	margin: 2px;
+	border: none;
+	border-radius: 5px;
+}
+
+input[type=button] {
+	
+	background-color: #fff;
+}
+
+input[type=button]:hover {
+	cursor: pointer;
+	background-color: #222;
+	color: #fff;
+}
+
+#controls {
+	margin-top: 20px;
+}
+
+#controls > input {
+	margin-top: 8px;
+	padding: 8px;
+	font-size: 100%;
+}

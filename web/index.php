@@ -6,10 +6,17 @@
 <title>Welcome to Secrecy!</title>
 	<meta charset="utf-8">
 
-	<link href="https://der.lukaslipp.at/common/jquery/jquery-ui.min.css" rel="stylesheet">
-	<link href="./style.css" rel="stylesheet">
-	<script src="https://der.lukaslipp.at/common/jquery/external/jquery/jquery.js"></script>
-	<script src="https://der.lukaslipp.at/common/jquery/jquery-ui.min.js"></script>
+	<script src="./js/jquery-3.4.1.min.js"></script>
+	
+	<script src="./js/jquery-ui.min.js"></script>
+	<link href="./css/jquery-ui.min.css" rel="stylesheet">
+
+	<script src="./js/bootstrap.min.js"></script>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="./css/style.css" rel="stylesheet">
+	
+	<script src="./settings.js"></script>
 	<script src="./join.js"></script>
 	
 </head>
