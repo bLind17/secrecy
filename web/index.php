@@ -28,22 +28,22 @@
 				<input class="form-control" type="text" id="joinRoomCode" placeholder="Room code" />
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
-			<div id="roomCode" hidden="hidden"></div>
-			<div id="wait" hidden="hidden">Please wait.</div>
-			<div id="yesNo" hidden="hidden">
+			<div id="roomCode"style="display:none;"></div>
+			<div id="wait"style="display:none;">Please wait.</div>
+			<div id="yesNo"style="display:none;">
 				<input type="btn btn-lg btn-primary btn-block" id="yesButton" value="Yes" />
 				<input type="btn btn-lg btn-primary btn-block" id="noButton" value="No" />
 			</div>
-			<div id="guess" hidden="hidden"></div>
-			<div id="score" hidden="hidden">
+			<div id="guess"style="display:none;"></div>
+			<div id="score"style="display:none;">
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
 			</div>
 			
 			<div id="controls">
-				<input type="btn btn-lg btn-primary btn-block" id="startRound" value="START" hidden="hidden" />
-				<input type="btn btn-lg btn-primary btn-block" id="cancelRound" value="Cancel round" hidden="hidden" />
-				<input type="btn btn-lg btn-primary btn-block" id="endRound" value="Score round" hidden="hidden" />
+				<input type="btn btn-lg btn-primary btn-block" id="startRound" value="START"style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" id="cancelRound" value="Cancel round"style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" id="endRound" value="Score round"style="display:none;" />
 			</div>
 		</div>
 	</div>
