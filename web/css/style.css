@@ -30,11 +30,9 @@
 	padding: 10px;
 }
 
-#login {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-
+.spacer {
+	margin-top: 5%;
+	margin-bottom: 5%;
 }
 
 #score {
@@ -43,25 +41,6 @@
 
 #pointsGame, #pointsQuestion {
 	color: white;
-}
-
-input {
-	font-size: 200%;
-	padding: 20px;
-	margin: 2px;
-	border: none;
-	border-radius: 5px;
-}
-
-input[type=button] {
-	
-	background-color: #fff;
-}
-
-input[type=button]:hover {
-	cursor: pointer;
-	background-color: #222;
-	color: #fff;
 }
 
 #controls {
