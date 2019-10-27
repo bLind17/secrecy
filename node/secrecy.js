@@ -1,14 +1,22 @@
-const path = require('path');
-
 const secrecyServer = require('secrecy_server');
 const WebSocket = require('ws');
 
+/**
+ * does nothing
+ */
 function noop() {}
 
+/**
+ * When a websocket client sends a pong message,
+ * we consider that a heartbeat and call it alive
+ */
 function heartbeat() {
   this.isAlive = true;
 }
 
+/**
+ * Websocket server instance
+ */
 const wss = new WebSocket.Server({ port: 1338, host: '0.0.0.0' })
 
 wss.on('connection', function connection(ws) {
@@ -18,7 +26,11 @@ wss.on('connection', function connection(ws) {
   ws.on('pong', heartbeat);
 });
 
-// keep clients alive (webhost requires this)
+/**
+ * Every X seconds we send a ping to our clients. If they return a pong,
+ * they will stay alive and connected. If they don't, in the next cycle we
+ * terminate their connection, to prevent zombie sockets walking around.
+ */
 const interval = setInterval(function ping() {
 	wss.clients.forEach(function each(ws) {
 		if (ws.isAlive === false) return ws.terminate();
@@ -26,6 +38,6 @@ const interval = setInterval(function ping() {
 		ws.isAlive = false;
 		ws.ping(noop);
 	});
-}, 30000);
+}, 30 * 1000);
 
-console.log("Websockets running.");
+console.log("Secrecy server started.");
