@@ -18,7 +18,11 @@ include 'functions.php';
 	<script src="../js/fontawesome.js"></script>
 	<script src="../settings.js"></script>
 	<script src="../secrecy.js"></script>
-	<script src="./js/host.js"></script>
+	<script src="../join.js"></script>
+	
+	<script> 
+		secrecy.setHost(true);
+	</script>
 	
 </head>
 <body>
@@ -27,7 +31,7 @@ include 'functions.php';
 		<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 		<table id="playerList" style="display:none;"></table>
 		<div id="controls">
-			<input type="button" class="game-element" id="startGame" value="START" style="display:none;" />
+			<input type="button" class="game-element" id="startRound" value="START" style="display:none;" />
 			<input type="button" class="game-element" id="endRound" value="Score round" style="display:none;" />
 			<input type="button" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
 			<input type="button" class="game-element" id="reopen" value="Reopen room" style="display:none;" />

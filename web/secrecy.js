@@ -1,9 +1,23 @@
 var secrecy = {};
 
-secrecy.resultCodes = {};
-secrecy.resultCodes.WEBSOCKET_OPENED = 1;
-secrecy.resultCodes.WEBSOCKET_CLOSED = 2;
-secrecy.resultCodes.WEBSOCKET_ERROR  = 3;
+/**
+* If true, this client might behave differently 
+*/
+secrecy._isHost = false;
+
+/**
+* Sets if this client should be considered a host (room)
+*/
+secrecy.setHost = function(isHost) {
+	secrecy._isHost = isHost;
+}
+
+/**
+* Checks if this client is considered the host
+*/
+secrecy.isHost = function() {
+	return secrecy._isHost;
+}
 
 /**
  * If true, debug logs will be printed to the console
@@ -40,20 +54,16 @@ secrecy.on = function(command, callback) {
  * Connect to the websocket given in the settings,
  * Attach open/close/error/message handlers to ws
  *
- * To handle the events, either pass a callback that understands the resultCodes
- * or attach a function to:
+ * To handle the events attach a function to:
  * secrecy.onWsOpen / secrecy.onWsClose / secrecy.onWsError
  */
-secrecy.connect = function(callback) {
+secrecy.connect = function() {
 	var url = settings['protocol'] + "://" + settings['host'] + ":" + settings['port'];
 	var connection = new WebSocket(url, ['soap', 'xmpp']);
 	secrecy.ws = connection;
 	
 	connection.onopen = function () {
 		secrecy.log('WebSocket opened.');
-		if(callback != undefined) {
-			callback(secrecy.resultCodes.WEBSOCKET_OPENED);
-		}
 		if(secrecy.onWsOpen != undefined) {
 			secrecy.onWsOpen();
 		}
@@ -61,9 +71,6 @@ secrecy.connect = function(callback) {
 	
 	connection.onclose = function () {
 		secrecy.log('WebSocket closed.');
-		if(callback != undefined) {
-			callback(secrecy.resultCodes.WEBSOCKET_CLOSED);
-		}
 		if(secrecy.onWsClose != undefined) {
 			secrecy.onWsClose();
 		}
@@ -72,9 +79,6 @@ secrecy.connect = function(callback) {
 	// Log errors
 	connection.onerror = function (error) {
 		secrecy.log('WebSocket error: ' + error);
-		if(callback != undefined) {
-			callback(secrecy.resultCodes.WEBSOCKET_ERROR);
-		}
 		if(secrecy.onWsError != undefined) {
 			secrecy.onWsError();
 		}

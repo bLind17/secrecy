@@ -112,23 +112,23 @@ secrecy.on("created", function(params) {
 	secrecy.hideGameElementsExcept("roomCodeInformation");
 });
 
-secrecy.on("joined", function(params) {
+secrecy.on("playerJoined", function(params) {
 	playerJoined(params[0], params[1], params[2]);
 });
 
-secrecy.on("left", function(params) {
+secrecy.on("playerLeft", function(params) {
 	playerLeft(params[1]);
 });
 
-secrecy.on("yesno", function(params) {
+secrecy.on("playerSentYesNo", function(params) {
 	$("#" + params[0]).find(".collectCheck").css('visibility', 'visible');
 });
 
-secrecy.on("guess", function(params) {
+secrecy.on("playerSentGuess", function(params) {
 	$("#" + params[0]).find(".guessCheck").css('visibility', 'visible');
 });
 
-secrecy.on("score", function(params) {
+secrecy.on("newPlayerScore", function(params) {
 	updatePlayerScore(params[0], parseInt(params[1]), parseInt(params[2]));
 });
 

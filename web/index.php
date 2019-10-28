@@ -1,5 +1,5 @@
 <?php 
-
+include './host/functions.php';  
 ?>
 <html>
 <head>
@@ -30,7 +30,9 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<div id="roomCode" style="display:none;"></div>
+			<div id="roomCode" style="display:none;"></div>		
+			<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+
 			<div id="wait" class="game-element" style="display:none;">Please wait.</div>
 			<div id="yesNo" class="game-element" style="display:none;">
 				<input type="btn btn-lg btn-primary btn-block" id="yesButton" value="Yes" />
@@ -45,6 +47,7 @@
 				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="startRound" value="START" style="display:none;" />
 				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
 				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="endRound" value="Score round" style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
 			</div>
 		</div>
 	</div>
