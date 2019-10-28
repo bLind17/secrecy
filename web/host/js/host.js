@@ -13,41 +13,25 @@ function reset(timeout, autoRoom = true) {
 			reset(0);
 		});
 	}		
-			
-	$("#startGame").hide();
-	$("#playerList").hide();
-	$("#reopen").hide();
-	$("#cancelRound").hide();
-	$("#endRound").hide();
 	
 	buildPlayerList();
 	
+	secrecy.onWsOpen = function () {
+		secrecy.log("open");
+		if(autoRoom) {
+			secrecy.sendCommand('create'); // create a room when connecting
+		}
+	};
+	secrecy.onWsClose = function () {
+		reset(3000);
+	};
+	
+	secrecy.onWsError = function () {
+		reset(3000);
+	};
+	
 	setTimeout(function () {
-		var url = settings['protocol'] + "://" + settings['host'] + ":" + settings['port'];
-		var connection = new WebSocket(url, ['soap', 'xmpp']);
-		session.ws = connection;
-		
-		connection.onopen = function () {
-			if(autoRoom) {
-				connection.send('create'); // create a room when connecting
-			}
-		};
-		
-		connection.onclose = function () {
-			console.log('WebSocket closed.');
-			reset(3000, false);
-		};
-
-		// Log errors
-		connection.onerror = function (error) {
-			console.log('WebSocket Error ' + error);
-			reset(3000, false);
-		};
-
-		// Log messages from the server
-		connection.onmessage = function (e) {
-			onMessageReceived(e.data);
-		};
+		secrecy.connect();
 	}, timeout);
 }
 
@@ -59,7 +43,8 @@ function buildPlayerList() {
 		"<th><i class='fas fa-check-circle'></i></th>" +
 		"<th>Score</th>"
 	));
-	console.log("Cleared players.");
+	
+	secrecy.log("Cleared players.");
 	
 	var sortedIDs = getSortedPlayerIDs();
 	for(var i = 0; i < sortedIDs.length; i++) {
@@ -121,72 +106,59 @@ function playerLeft(id) {
 	buildPlayerList();
 }
 
-function onMessageReceived(message) {
-	console.log(message);
-	var json = JSON.parse(message);
-	var params = json.param.split(";");
-	onCommand(json.action, params);
-}
+secrecy.on("created", function(params) {
+	secrecy.sendCommand("join", params[0], "ROOM");
+	secrecy.setRoomCode(params[0]);
+	secrecy.hideGameElementsExcept("roomCodeInformation");
+});
 
-function setRoomCode(roomCode) {
-	$("#roomCode").text(roomCode);
-}
+secrecy.on("joined", function(params) {
+	playerJoined(params[0], params[1], params[2]);
+});
 
-function onCommand(command, params) {
-	switch(command) {
-		case 'created':
-			session.ws.send("join:" + params[0] + ";ROOM");
-			setRoomCode(params[0]);
-			$("#roomCodeInformation").show();
-			break;
-		case 'joined': 
-			playerJoined(params[0], params[1], params[2]);
-			break;
-		case 'left': 
-			playerLeft(params[1]);
-			break;
-		case 'yesno': 
-			$("#" + params[0]).find(".collectCheck").css('visibility', 'visible');
-			break;
-		case 'guess': 
-			$("#" + params[0]).find(".guessCheck").css('visibility', 'visible');
-			break;
-		case 'score': 
-			updatePlayerScore(params[0], parseInt(params[1]), parseInt(params[2]));
-			break;
-		case 'roundEnd':
-			$("#endRound").hide();
-			break;
-		case 'readyForNewRound': 
-			buildPlayerList();
-			$("#startGame").show();
-			$("#reopen").show();
-			$("#endRound").hide();
-			break;
-		case 'exhausted':	
-			showDialog("I am sorry!", "Someone is creating too many rooms. Please try again shortly!");	
-			break;
-		case 'started': 
-			session.hasBeenStarted = true;
-			$("#startGame").hide();
-			$("#cancelRound").show();
-			$("#roomCodeInformation").hide();
-			$("#hide").show();
-			$("#reopen").hide();
-			hideAllCheckMarks();
-			break;
-		case 'cancelled':
-			$("#startGame").show();
-			$("#cancelRound").hide();
-			$("#reopen").show();
-			hideAllCheckMarks();
-			break;
-		case 'collectionDone':
-			$("#endRound").show();
-			$("#cancelRound").hide();
-			break;
-	}
-}
+secrecy.on("left", function(params) {
+	playerLeft(params[1]);
+});
+
+secrecy.on("yesno", function(params) {
+	$("#" + params[0]).find(".collectCheck").css('visibility', 'visible');
+});
+
+secrecy.on("guess", function(params) {
+	$("#" + params[0]).find(".guessCheck").css('visibility', 'visible');
+});
+
+secrecy.on("score", function(params) {
+	updatePlayerScore(params[0], parseInt(params[1]), parseInt(params[2]));
+});
+
+secrecy.on("roundEnd", function(params) {
+	secrecy.hideGameElementsExcept();
+});
+
+secrecy.on("readyForNewRound", function(params) {
+	buildPlayerList();
+	secrecy.hideGameElementsExcept("reopen", "startGame");
+});
+
+secrecy.on("exhausted", function(params) {
+	secrecy.showDialog("I am sorry!", "Someone is creating too many rooms. Please try again shortly!");	
+});
+
+secrecy.on("started", function(params) {
+	session.hasBeenStarted = true;
+	secrecy.hideGameElementsExcept("cancelRound");
+	hideAllCheckMarks();
+});
+
+secrecy.on("cancelled", function(params) {
+	hideAllCheckMarks();
+	secrecy.hideGameElementsExcept("reopen", "startGame");
+});
+
+secrecy.on("collectionDone", function(params) {
+	secrecy.hideGameElementsExcept("endRound");
+});
 
 function hideAllCheckMarks() {
 	$(".collectCheck").css('visibility', 'hidden');
@@ -194,78 +166,13 @@ function hideAllCheckMarks() {
 }
 
 function startGame() {	
-	session.ws.send("start");
+	secrecy.sendCommand("start");
 }
-
-// if json stringify doesnt work
-function decycle(obj, stack = []) {
-    if (!obj || typeof obj !== 'object')
-        return obj;
-    
-    if (stack.includes(obj))
-        return null;
-
-    let s = stack.concat([obj]);
-
-    return Array.isArray(obj)
-        ? obj.map(x => decycle(x, s))
-        : Object.fromEntries(
-            Object.entries(obj)
-                .map(([k, v]) => [k, decycle(v, s)]));
-}
-
-function showDialog(title, message, buttonCallback1, buttonText1, buttonText2, buttonCallback2) {
-	console.log("dialog " + title);
-	$( "#dialog" ).dialog('option', 'title', title);
-	$( "#dialogText" ).text(message);
-	
-	var buttons = {};
-	session.buttonCallbacks = {};
-	
-	if(buttonText1 == undefined) {
-		buttonText1 = "OK";
-	}
-
-	buttons[buttonText1] = function() {
-		$(this).dialog( "close" );
-		if(buttonCallback1 != null && buttonCallback1 != undefined) {
-			buttonCallback1();
-		}
-	};
-	
-	if(buttonText2 != undefined) {
-		buttons[buttonText2] = function(y, x) {
-			$( "#dialog" ).dialog( "close" );
-			if(buttonCallback2 != null && buttonCallback2 != undefined) {
-				buttonCallback2();
-			}
-		};
-	}
-	
-	$( "#dialog" ).dialog('option', 'buttons', buttons);
-	$( "#dialog" ).dialog("open");
-}
-
 
 $(document).ready(function() {
-	$( "#dialog" ).dialog({
-		resizable: false,
-		height: "auto",
-		width: 400,
-		modal: true,
-		autoOpen: false,
-		show: "blind",
-		hide: "blind",
-		buttons: {
-			"OK": function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	});
-	
 	$("#startGame").click(function() {
 		if(!session.hasBeenStarted && Object.keys(session.players).length < 3) {
-			showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startGame, "Yes", "No");	
+			secrecy.showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startGame, "Yes", "No");	
 		} else {
 			startGame();
 		}
@@ -273,22 +180,20 @@ $(document).ready(function() {
 	
 	
 	$("#cancelRound").click(function() {
-		session.ws.send("cancelRound");
+		secrecy.sendCommand("cancelRound");
 	});
 	
 	$("#CrashButton").click(function() {
-		session.ws.send("pleaseCrash");
+		secrecy.sendCommand("pleaseCrash");
 	});
 	
 	$("#endRound").click(function() {
-		session.ws.send("endround");
+		secrecy.sendCommand("endround");
 	});
 	
 	$("#reopen").click(function() {		
-		session.ws.send("reopen");
-		$("#roomCodeInformation").show();
-		$("#startGame").show();
-		$("#reopen").hide();
+		secrecy.sendCommand("reopen");
+		secrecy.hideGameElementsExcept("startGame", "roomCodeInformation", "reopen");
 		hideAllCheckMarks();
 	});
 	

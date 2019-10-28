@@ -16,26 +16,24 @@ include 'functions.php';
 	<link href="../css/style.css" rel="stylesheet">
 
 	<script src="../js/fontawesome.js"></script>
-	<script src="./js/host.js"></script>
 	<script src="../settings.js"></script>
+	<script src="../secrecy.js"></script>
+	<script src="./js/host.js"></script>
 	
 </head>
 <body>
 	<div id="content">
 		<div id="roomCode"></div>
-		<div id="roomCodeInformation">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
-		<table id="playerList" hidden="hidden"></table>
+		<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+		<table id="playerList" style="display:none;"></table>
 		<div id="controls">
-			<input type="button" class="game-element" id="startGame" value="START" hidden="hidden" />
-			<input type="button" class="game-element" id="endRound" value="Score round" hidden="hidden" />
-			<input type="button" class="game-element" id="cancelRound" value="Cancel round" hidden="hidden" />
-			<input type="button" class="game-element" id="reopen" value="Reopen room" hidden="hidden" />
-			<input type="button" class="game-element" id="CrashButton" value="Crash" hidden="hidden" />
+			<input type="button" class="game-element" id="startGame" value="START" style="display:none;" />
+			<input type="button" class="game-element" id="endRound" value="Score round" style="display:none;" />
+			<input type="button" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
+			<input type="button" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
+			<input type="button" class="game-element" id="CrashButton" value="Crash" style="display:none;" />
 		</div>
 		  
-	</div>
-	<div id="dialog" title="Do what?">
-	  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p>
 	</div>
 </body>
 
