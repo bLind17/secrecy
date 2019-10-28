@@ -18,7 +18,7 @@ include 'functions.php';
 	<script src="../js/fontawesome.js"></script>
 	<script src="../settings.js"></script>
 	<script src="../secrecy.js"></script>
-	<script src="../join.js"></script>
+	<script src="../secrecy_client.js"></script>
 	
 	<script> 
 		secrecy.setHost(true);

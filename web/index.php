@@ -18,7 +18,7 @@ include './host/functions.php';
 	
 	<script src="./settings.js"></script>
 	<script src="./secrecy.js"></script>
-	<script src="./join.js"></script>
+	<script src="./secrecy_client.js"></script>
 	
 </head>
 <body>
