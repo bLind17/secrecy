@@ -3,8 +3,10 @@ var session = {};
 function reset(timeout) {
 	session = {};
 	
-	secrecy.hideGameElementsExcept("login");
-	
+	secrecy.onWsOpen = function () {
+		secrecy.log("open");
+		secrecy.hideGameElementsExcept("login");
+	};
 	secrecy.onWsClose = function () {
 		reset(3000);
 	};
@@ -31,7 +33,7 @@ function showStartGameDialog() {
 	
 secrecy.on("joined", function(params) {
 	secrecy.setRoomCode(params[0]);
-	secrecy.hideGameElementsExcept("wait");
+	secrecy.hideGameElementsExcept("wait", "roomCode");
 });
 
 secrecy.on("collect", function(params) {
@@ -39,15 +41,13 @@ secrecy.on("collect", function(params) {
 	session.ongoingRound = true;
 
 	if(session.ruler){
-		secrecy.hideGameElementsExcept("yesNo", "startRound");
+		secrecy.hideGameElementsExcept("yesNo", "cancelRound");
 	} else {
 		secrecy.hideGameElementsExcept("yesNo");
 	}
 });
 
 secrecy.on("guess", function(params) {
-	$("#yesNo").hide();
-	
 	$('#guess').empty();
 	var playerCount = parseInt(params[0]);
 	for(var i = 0; i <= playerCount; i++) {
@@ -58,7 +58,7 @@ secrecy.on("guess", function(params) {
 	});
 	
 	if(session.ruler){
-		secrecy.hideGameElementsExcept("guess", "startRound");
+		secrecy.hideGameElementsExcept("guess", "cancelRound");
 	} else {
 		secrecy.hideGameElementsExcept("guess");
 	}
@@ -78,7 +78,7 @@ secrecy.on("score", function(params) {
 
 secrecy.on("readyForNewRound", function(params) {
 	if(session.ruler){
-		secrecy.hideGameElementsExcept("startRound");
+		secrecy.hideGameElementsExcept("score", "startRound");
 	}
 });
 
@@ -107,7 +107,7 @@ secrecy.on("joinerror", function(params) {
 secrecy.on("cancel", function(params) {
 	session.ongoingRound = false;
 	if(session.ruler){
-		secrecy.hideGameElementsExcept("wait, startRound");
+		secrecy.hideGameElementsExcept("startRound");
 	} else {
 		secrecy.hideGameElementsExcept("wait");
 	}

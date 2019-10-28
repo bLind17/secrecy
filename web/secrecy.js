@@ -94,7 +94,7 @@ secrecy.onMessageReceived = function(message) {
 	secrecy.log("[Message] " + message);
 	var json = JSON.parse(message);
 	var params = json.param.split(";");
-	onCommand(json.action, params);
+	secrecy.onCommand(json.action, params);
 }
 
 /**
@@ -114,7 +114,8 @@ secrecy.onCommand = function(command, params) {
 secrecy.sendCommand = function(commandKey) {
 	var args = Array.prototype.slice.call(arguments, 1);
 	var param = args.join(";");
-	secrecy.ws.send(commandKey + ":" + param);
+	params = param.length > 0 ? ":" + param : "";
+	secrecy.ws.send(commandKey + params);
 }
 
 /**
@@ -125,7 +126,7 @@ secrecy.sendCommand = function(commandKey) {
 secrecy.hideGameElementsExcept = function(elementID) {
 	$(".game-element").hide();
 	
-	var args = Array.prototype.slice.call(arguments, 1);
+	var args = Array.prototype.slice.call(arguments);
 	for(var i = 0; i < args.length; i++) {
 		elementID = args[i];
 		if(elementID.startsWith("#")) {
@@ -150,7 +151,7 @@ secrecy.setRoomCode = function(roomCode) {
 * Must be called before using this library
 * call this when DOM is ready.
 */
-secrecy.setup() = function() {
+secrecy.setup = function() {
 	// add dialog div to enable dialog showing^^
 	$("body").append($('<div id="dialog" title="Do what?"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p></div>'));
 	

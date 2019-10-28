@@ -17,14 +17,14 @@
 	<link href="./css/dark-mode.css" rel="stylesheet">
 	
 	<script src="./settings.js"></script>
-	<script src="./join.js"></script>
 	<script src="./secrecy.js"></script>
+	<script src="./join.js"></script>
 	
 </head>
 <body>
 	<div id="container">
 		<div class="col-10 offset-1">
-			<div class="input-group input-group-lg spacer" class="game-element" id="login">
+			<div class="input-group input-group-lg spacer game-element" id="login">
 				<input class="form-control" type="text" id="name" maxlength="18" placeholder="Johnny Dough 😆" />
 				<input class="form-control" type="text" id="joinRoomCode" placeholder="Room code" />
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
