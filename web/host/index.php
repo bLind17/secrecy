@@ -42,11 +42,6 @@ include 'functions.php';
 			</div>
 		</div>
 	</div>
-	
-	<div id="dialog" title="Do what?">
-	  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p>
-	</div>
-
 
 	<nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
 	<a class="navbar-brand" href="#">Secrecy</a>
