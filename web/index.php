@@ -29,24 +29,24 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<div id="roomCode" ></div>		
+			<h1><div class="hidden spacer" id="roomCode"></div></h1>
 
 			<div id="wait" class="game-element hidden" >Please wait.</div>
-			<div id="yesNo" class="game-element hidden" >
-				<input type="btn btn-lg btn-primary btn-block" id="yesButton" value="Yes" />
-				<input type="btn btn-lg btn-primary btn-block" id="noButton" value="No" />
+			<div id="yesNo" class="game-element hidden spacer" >
+				<input type="button" class="btn btn-lg btn-primary" id="yesButton" value="Yes" />
+				<input type="button" class="btn btn-lg btn-primary" id="noButton" value="No" />
 			</div>
 			<div id="guess" class="game-element hidden" ></div>
 			<div id="score" class="game-element hidden" >
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
 			</div>
-			<div id="controls">
-				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="startRound" value="START"  />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="cancelRound" value="Cancel round"  />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="endRound" value="Score round"  />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="reopen" value="Reopen room"  />
-			</div> hidden
+			<div class="spacer" id="controls">
+				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="startRound" value="Start"  />
+				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="cancelRound" value="Cancel Round"  />
+				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="endRound" value="Score Round"  />
+				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="reopen" value="Reopen Room"  />
+			</div>
 		</div>
 	</div>
 	

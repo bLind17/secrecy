@@ -32,15 +32,18 @@ function reset(timeout, autoRoom = true) {
 function buildPlayerList() {
 	$('#playerList').empty();
 	$('#playerList').append($(
+		"<thead>" +
 		"<th>Name</th>" +
 		"<th><i class='fas fa-check-square'></i></th>" +
 		"<th><i class='fas fa-check-circle'></i></th>" +
-		"<th>Score</th>"
+		"<th>Score</th>" +
+		"</thead>"
 	));
 	
 	secrecy.log("Cleared players.");
 	
 	var sortedIDs = getSortedPlayerIDs();
+	$('#playerList').append("<tbody>");
 	for(var i = 0; i < sortedIDs.length; i++) {
 		var id = sortedIDs[i];
 		
@@ -56,7 +59,7 @@ function buildPlayerList() {
 		+ "<td class='scoreCell'>" + score + "</td>"
 		+ "</tr>" ));
 	}
-	
+	$('#playerList').append("</tbody>");
 	hideAllCheckMarks();
 }
 

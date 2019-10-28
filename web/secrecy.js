@@ -148,7 +148,7 @@ secrecy.setRoomCode = function(roomCode) {
 		roomCode = "";
 	}
 	
-	$("#roomCode").text(roomCode);
+	$("#roomCode").text("Room #" + roomCode);
 }
 
 /**
