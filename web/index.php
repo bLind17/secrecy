@@ -1,5 +1,5 @@
 <?php 
-
+include './host/functions.php';  
 ?>
 <html>
 <head>
@@ -17,33 +17,37 @@
 	<link href="./css/dark-mode.css" rel="stylesheet">
 	
 	<script src="./settings.js"></script>
-	<script src="./join.js"></script>
+	<script src="./secrecy.js"></script>
+	<script src="./secrecy_client.js"></script>
 	
 </head>
 <body>
 	<div id="container">
 		<div class="col-10 offset-1">
-			<div class="input-group input-group-lg spacer" id="login">
+			<div class="input-group input-group-lg spacer game-element" id="login">
 				<input class="form-control" type="text" id="name" maxlength="18" placeholder="Johnny Dough 😆" />
 				<input class="form-control" type="text" id="joinRoomCode" placeholder="Room code" />
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
-			<div class="hidden" id="roomCode"></div>
-			<div class="hidden" id="wait">Please wait.</div>
-			<div class="hidden" id="yesNo">
+			
+			<div id="roomCode" style="display:none;"></div>		
+			<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+
+			<div id="wait" class="game-element" style="display:none;">Please wait.</div>
+			<div id="yesNo" class="game-element" style="display:none;">
 				<input type="btn btn-lg btn-primary btn-block" id="yesButton" value="Yes" />
 				<input type="btn btn-lg btn-primary btn-block" id="noButton" value="No" />
 			</div>
-			<div class="hidden" id="guess"></div>
-			<div class="hidden" id="score">
+			<div id="guess" class="game-element" style="display:none;"></div>
+			<div id="score" class="game-element" style="display:none;">
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
 			</div>
-			
 			<div id="controls">
-				<input class="hidden" type="btn btn-lg btn-primary btn-block" id="startRound" value="START" />
-				<input class="hidden" type="btn btn-lg btn-primary btn-block" id="cancelRound" value="Cancel round" />
-				<input class="hidden" type="btn btn-lg btn-primary btn-block" id="endRound" value="Score round" />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="startRound" value="START" style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="endRound" value="Score round" style="display:none;" />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
 			</div>
 		</div>
 	</div>
@@ -73,10 +77,6 @@
 		</ul>
 	</div>
 	</nav>
-
-	<div id="dialog" title="Do what?">
-	  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p>
-	</div>
 </body>
 
 <script>

@@ -17,8 +17,13 @@ include 'functions.php';
 	<link href="../css/dark-mode.css" rel="stylesheet">
 	<link href="../css/fa-all.css" rel="stylesheet">
 
-	<script src="./js/host.js"></script>
 	<script src="../settings.js"></script>
+	<script src="../secrecy.js"></script>
+	<script src="../secrecy_client.js"></script>
+	
+	<script> 
+		secrecy.setHost(true);
+	</script>
 	
 </head>
 <body>
@@ -26,17 +31,18 @@ include 'functions.php';
 		<div class="col-10 offset-1">
 			<h1><div class="spacer" id="roomCode"></div></h1>
 		
-			<div id="roomCodeInformation">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+		<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 			<table class="table hidden" id="playerList"></table>
 			<div class="spacer" id="controls">
-				<input type="button" class="btn btn-lg btn-primary" class="hidden" id="startGame" value="START" />
-				<input type="button" class="btn btn-lg btn-primary" class="hidden" id="endRound" value="Score round" />
-				<input type="button" class="btn btn-lg btn-primary" class="hidden" id="cancelRound" value="Cancel round" />
-				<input type="button" class="btn btn-lg btn-primary" class="hidden" id="reopen" value="Reopen room" />
-				<input type="button" class="btn btn-lg btn-primary" class="hidden" id="CrashButton" value="Crash" />
+			<input type="button" class="game-element" id="startRound" value="START" style="display:none;" />
+			<input type="button" class="game-element" id="endRound" value="Score round" style="display:none;" />
+			<input type="button" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
+			<input type="button" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
+			<input type="button" class="game-element" id="CrashButton" value="Crash" style="display:none;" />
 			</div>
 		</div>
 	</div>
+	
 	<div id="dialog" title="Do what?">
 	  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p>
 	</div>
@@ -67,11 +73,5 @@ include 'functions.php';
 	</nav>
 
 </body>
-
-<script>
-
-	
-
-</script>
 
 </html>
