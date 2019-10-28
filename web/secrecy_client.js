@@ -152,7 +152,7 @@ secrecy.on("guess", function(params) {
 	$('#guess').empty();
 	var playerCount = parseInt(params[0]);
 	for(var i = 0; i <= playerCount; i++) {
-		$("#guess").append($("<input class='guessNumber' type='button' value='" + i + "' />"));
+		$("#guess").append($("<input class='guessNumber btn btn-lg btn-primary' type='button' value='" + i + "' />"));
 	}
 	$(".guessNumber").click(function() {
 		secrecy.sendCommand("guess:" + $(this).val());
