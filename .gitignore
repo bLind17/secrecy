@@ -6,3 +6,5 @@ node/package-lock.json
 node/node_modules/uuid/
 
 node/node_modules/.bin/
+
+node/.htaccess
