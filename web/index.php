@@ -29,24 +29,24 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<div id="roomCode" style="display:none;"></div>		
+			<div id="roomCode" ></div>		
 
-			<div id="wait" class="game-element" style="display:none;">Please wait.</div>
-			<div id="yesNo" class="game-element" style="display:none;">
+			<div id="wait" class="game-element hidden" >Please wait.</div>
+			<div id="yesNo" class="game-element hidden" >
 				<input type="btn btn-lg btn-primary btn-block" id="yesButton" value="Yes" />
 				<input type="btn btn-lg btn-primary btn-block" id="noButton" value="No" />
 			</div>
-			<div id="guess" class="game-element" style="display:none;"></div>
-			<div id="score" class="game-element" style="display:none;">
+			<div id="guess" class="game-element hidden" ></div>
+			<div id="score" class="game-element hidden" >
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
 			</div>
 			<div id="controls">
-				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="startRound" value="START" style="display:none;" />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="endRound" value="Score round" style="display:none;" />
-				<input type="btn btn-lg btn-primary btn-block" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
-			</div>
+				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="startRound" value="START"  />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="cancelRound" value="Cancel round"  />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="endRound" value="Score round"  />
+				<input type="btn btn-lg btn-primary btn-block" class="game-element hidden" id="reopen" value="Reopen room"  />
+			</div> hidden
 		</div>
 	</div>
 	

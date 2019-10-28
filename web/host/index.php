@@ -29,16 +29,16 @@ include 'functions.php';
 <body>
 	<div id="container">
 		<div class="col-10 offset-1">
-			<h1><div class="spacer" id="roomCode"></div></h1>
+			<h1><div class="hidden" class="spacer" id="roomCode"></div></h1>
 		
-		<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+		<div id="roomCodeInformation" class="game-element spacer">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 			<table class="table hidden" id="playerList"></table>
 			<div class="spacer" id="controls">
-			<input type="button" class="game-element" id="startRound" value="START" style="display:none;" />
-			<input type="button" class="game-element" id="endRound" value="Score round" style="display:none;" />
-			<input type="button" class="game-element" id="cancelRound" value="Cancel round" style="display:none;" />
-			<input type="button" class="game-element" id="reopen" value="Reopen room" style="display:none;" />
-			<input type="button" class="game-element" id="CrashButton" value="Crash" style="display:none;" />
+			<input type="button" class="game-element hidden" id="startRound" value="START" />
+			<input type="button" class="game-element hidden" id="endRound" value="Score round" />
+			<input type="button" class="game-element hidden" id="cancelRound" value="Cancel round" />
+			<input type="button" class="game-element hidden" id="reopen" value="Reopen room" />
+			<input type="button" class="game-element hidden" id="CrashButton" value="Crash" />
 			</div>
 		</div>
 	</div>
