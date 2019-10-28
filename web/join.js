@@ -1,272 +1,192 @@
 var session = {};
 
-function onMessageReceived(message) {
-	console.log(message);
-	var json = JSON.parse(message);
-	var params = json.param.split(";");
-	onCommand(json.action, params);
-}
-
-function setRoomCode(roomCode) {
-	$("#roomCode").text(roomCode);
-}
-
 function reset(timeout) {
 	session = {};
-	$("#score").hide();
-	$("#yesNo").hide();
-	$("#guess").hide();
-	$("#startRound").hide();
-	$("#cancelRound").hide();
-	$("#endRound").hide();
 	
-	$("#wait").hide();
-	$("#joinRoomCode").text("");
+	secrecy.hideGameElementsExcept("login");
 	
-	$("#roomCode").hide();
+	secrecy.onWsClose = function () {
+		reset(3000);
+	};
+	
+	secrecy.onWsError = function () {
+		reset(3000);
+	};
 	
 	setTimeout(function () {
-		var url = settings['protocol'] + "://" + settings['host'] + ":" + settings['port'];
-		var connection = new WebSocket(url, ['soap', 'xmpp']);
-		session.ws = connection;
-		
-		connection.onopen = function () {
-		};
-		
-		connection.onclose = function () {
-			reset(3000);
-		};
-
-		// Log errors
-		connection.onerror = function (error) {
-			console.log('WebSocket Error ' + error);
-			reset(3000);
-		};
-
-		// Log messages from the server
-		connection.onmessage = function (e) {
-			onMessageReceived(e.data);
-		};
-		
-		$("#login").show();	
+		secrecy.connect();
 	}, timeout);
 }
 
 function startGame() {
 	if(session.ruler){
-		session.ws.send("start");
-		
-		$("#startRound").hide();
-		$("#cancelRound").show();
+		secrecy.sendCommand("start");
+		secrecy.hideGameElementsExcept("cancelRound");
 	}
 }
 
 function showStartGameDialog() {
-	showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startGame, "Yes", "No");
+	secrecy.showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startGame, "Yes", "No");
 }
+	
+secrecy.on("joined", function(params) {
+	secrecy.setRoomCode(params[0]);
+	secrecy.hideGameElementsExcept("wait");
+});
 
-function showWaitUI(roomCode) {
-	$("#score").hide();
+secrecy.on("collect", function(params) {
+	session.hasBeenStarted = true;
+	session.ongoingRound = true;
+
+	if(session.ruler){
+		secrecy.hideGameElementsExcept("yesNo", "startRound");
+	} else {
+		secrecy.hideGameElementsExcept("yesNo");
+	}
+});
+
+secrecy.on("guess", function(params) {
 	$("#yesNo").hide();
-	$("#guess").hide();
-	$("#login").hide();
-	if(roomCode != undefined) {
-		$("#roomCode").text(roomCode);
+	
+	$('#guess').empty();
+	var playerCount = parseInt(params[0]);
+	for(var i = 0; i <= playerCount; i++) {
+		$("#guess").append($("<input class='guessNumber' type='button' value='" + i + "' />"));
 	}
-	$("#roomCode").show();
-	$("#wait").show();
-}
-		
-
-function showDialog(title, message, buttonCallback1, buttonText1, buttonText2, buttonCallback2) {
-	console.log("dialog " + title);
-	$( "#dialog" ).dialog('option', 'title', title);
-	$( "#dialogText" ).text(message);
+	$(".guessNumber").click(function() {
+		secrecy.sendCommand("guess:" + $(this).val());
+	});
 	
-	var buttons = {};
-	session.buttonCallbacks = {};
-	
-	if(buttonText1 == undefined) {
-		buttonText1 = "OK";
+	if(session.ruler){
+		secrecy.hideGameElementsExcept("guess", "startRound");
+	} else {
+		secrecy.hideGameElementsExcept("guess");
 	}
+});
 
-	buttons[buttonText1] = function() {
-		$(this).dialog( "close" );
-		if(buttonCallback1 != null && buttonCallback1 != undefined) {
-			buttonCallback1();
-		}
-	};
-	
-	if(buttonText2 != undefined) {
-		buttons[buttonText2] = function(y, x) {
-			$( "#dialog" ).dialog( "close" );
-			if(buttonCallback2 != null && buttonCallback2 != undefined) {
-				buttonCallback2();
-			}
-		};
+secrecy.on("guessed", function(params) {
+	secrecy.hideGameElementsExcept("wait");
+	$("#guess").empty();
+});
+
+secrecy.on("score", function(params) {
+	session.ongoingRound = false;
+	$("#pointsQuestion").text(params[0]);
+	$("#pointsGame").text(params[1]);
+    secrecy.hideGameElementsExcept("score");
+});
+
+secrecy.on("readyForNewRound", function(params) {
+	if(session.ruler){
+		secrecy.hideGameElementsExcept("startRound");
 	}
-	
-	$( "#dialog" ).dialog('option', 'buttons', buttons);
-	$( "#dialog" ).dialog("open");
-}
+});
 
-	
-function onCommand(command, params) {
-	switch(command) {
-		case 'joined':
-			showWaitUI(params[0]);
-			break;
-		case 'collect':
-			session.hasBeenStarted = true;
-			session.ongoingRound = true;
-			if(session.ruler){
-				$("#startRound").hide();
-				$("#cancelRound").show();
-			}
-			$("#wait").hide();
-			$("#score").hide();
-			$("#yesNo").show();
-			break;
-		case 'guess':
-			$("#yesNo").hide();
+secrecy.on("collectionDone", function(params) {
+	if(session.ruler){
+		secrecy.hideGameElementsExcept("endRound");
+	}
+});
+
+secrecy.on("bye", function(params) {
+	secrecy.showDialog("This is the end.", "Your gamemaster has ended this game. Thanks for playing!");
+});
+
+secrecy.on("noroom", function(params) {
+	secrecy.showDialog("Whoops.", "This room does not exist. Please check the room code and try again.");
+});
+
+secrecy.on("roomBusy", function(params) {
+	secrecy.showDialog("Whoops.", "This room is closed for business! If you want to join the running game, please ask the host to reopen it after the ongoing round.");
+});
+
+secrecy.on("joinerror", function(params) {
+	secrecy.showDialog("Whoops.", "There has been an error. Make sure that your name and room code do not contain any ';', fancy symbols or anything else that you might think could be interpreted as an injection attempt. Behave and vaccinate!");
+});
+
+secrecy.on("cancel", function(params) {
+	session.ongoingRound = false;
+	if(session.ruler){
+		secrecy.hideGameElementsExcept("wait, startRound");
+	} else {
+		secrecy.hideGameElementsExcept("wait");
+	}
+});
 			
-			$('#guess').empty();
-			var playerCount = parseInt(params[0]);
-			for(var i = 0; i <= playerCount; i++) {
-				$("#guess").append($("<input class='guessNumber' type='button' value='" + i + "' />"));
-			}
-			$(".guessNumber").click(function() {
-				session.ws.send("guess:" + $(this).val());
-			});
-			$("#guess").show();
-			break;
-		case 'guessed':
-			$("#guess").hide();
-			$("#guess").empty();
-			break;
-		case 'score':
-			session.ongoingRound = false;
-			$("#pointsQuestion").text(params[0]);
-			$("#pointsGame").text(params[1]);
-			$("#score").show();
-			if(session.ruler){
-				$("#cancelRound").hide();
-				$("#endRound").hide();
-			}
-			break;
-		case 'readyForNewRound': 
-			if(session.ruler){
-				$("#startRound").show();
-			}
-			break;
-		case 'collectionDone':
-			if(session.ruler){
-				$("#endRound").show();
-				$("#cancelRound").hide();
-			}
-			break;
-		case 'bye': 
-			showDialog("This is the end.", "Your gamemaster has ended this game. Thanks for playing!");
-			break;
-		case 'noroom': 
-			showDialog("Whoops.", "This room does not exist. Please check the room code and try again.");
-			break;
-		case 'roomBusy': 
-			showDialog("Whoops.", "This room is closed for business! If you want to join the running game, please ask the host to reopen it after the ongoing round.");
-			break;
-		case 'joinerror': 
-			showDialog("Whoops.", "There has been an error. Make sure that your name and room code do not contain any ';', fancy symbols or anything else that you might think could be interpreted as an injection attempt. Behave and vaccinate!");
-			break;
-		case 'cancel': 
-			showWaitUI();
-			session.ongoingRound = false;
-			if(session.ruler){
-				$("#startRound").show();
-				$("#cancelRound").hide();
-			}
-			break;
-		case 'ruler': 
-			session.ruler = true;
-			if(session.ongoingRound) {
-				$("#cancelRound").show();
+secrecy.on("ruler", function(params) {
+	session.ruler = true;
+	if(session.ongoingRound) {
+		secrecy.hideGameElementsExcept("cancelRound");
+	} else {
+		secrecy.hideGameElementsExcept("startRound");
+	}
+});
+
+secrecy.on("rulerInfo", function(params) {
+	switch(params[0]) {
+		case 'start':
+			if(!session.hasBeenStarted && parseInt(params[1]) < 3) {
+				showStartGameDialog();
 			} else {
-				$("#startRound").show();
-			}
-				
-			break;
-		case 'rulerInfo': 
-			switch(params[0]) {
-				case 'start':
-					if(!session.hasBeenStarted && parseInt(params[1]) < 3) {
-						showStartGameDialog();
-					} else {
-						startGame();
-					}
-					break;
+				startGame();
 			}
 			break;
 	}
-}
-
+});
+	
 $(document).ready(function() {
 	var oldName = localStorage.getItem('name');
 	if(oldName != undefined) {
 		$("#name").val(oldName);
 	} 
 	
-	$( "#dialog" ).dialog({
-		resizable: false,
-		height: "auto",
-		width: 400,
-		modal: true,
-		autoOpen: false,
-		show: "blind",
-		hide: "blind"
-	});
-			
 	$("#joinButton").click(function() {
 		var roomCode = $("#joinRoomCode").val();
 		var name = $("#name").val();
 		
 		if(name.length == 0) {
-			showDialog("Warning", "Please enter a name.", function() {
-				$("#name").focus();
-			});
+			secrecy.showDialog(	
+				"Warning", 
+				"Please enter a name.", 
+				function() {
+					$("#name").focus();
+				}
+			);
+			
 			return;
 		}
 		
 		localStorage.setItem('name', name);
 		
-		var command = "join:" + roomCode + ";" + name;
-		console.log(command);
-		session.ws.send(command);
+		secrecy.sendCommand("join", roomCode, name);
 	});
 	
 	$("#CrashButton").click(function() {
-		session.ws.send("pleaseCrash");
+		secrecy.sendCommand("pleaseCrash");
 	});
 	
 	$("#yesButton").click(function() {
-		session.ws.send("collect:1");
+		secrecy.sendCommand("collect:1");
 	});
 	
 	$("#noButton").click(function() {
-		session.ws.send("collect:0");
+		secrecy.sendCommand("collect:0");
 	});
 	
 	$("#startRound").click(function() {
-		session.ws.send("rulerInfo:start");
+		secrecy.sendCommand("rulerInfo:start");
 	});
 	
 	$("#endRound").click(function() {
-		session.ws.send("endround");
+		secrecy.sendCommand("endround");
 	});	
 	
 	$("#cancelRound").click(function() {
-		session.ws.send("cancelRound");
-		$("#startRound").show();
-		$("#cancelRound").hide();
+		secrecy.sendCommand("cancelRound");
+		secrecy.hideGameElementsExcept("startRound");
 	});
+	
+	secrecy.setup();
 	
 	// START
 	reset(0);

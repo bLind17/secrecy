@@ -26,11 +26,11 @@ include 'functions.php';
 		<div id="roomCodeInformation">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 		<table id="playerList" hidden="hidden"></table>
 		<div id="controls">
-			<input type="button" id="startGame" value="START" hidden="hidden" />
-			<input type="button" id="endRound" value="Score round" hidden="hidden" />
-			<input type="button" id="cancelRound" value="Cancel round" hidden="hidden" />
-			<input type="button" id="reopen" value="Reopen room" hidden="hidden" />
-			<input type="button" id="CrashButton" value="Crash" hidden="hidden" />
+			<input type="button" class="game-element" id="startGame" value="START" hidden="hidden" />
+			<input type="button" class="game-element" id="endRound" value="Score round" hidden="hidden" />
+			<input type="button" class="game-element" id="cancelRound" value="Cancel round" hidden="hidden" />
+			<input type="button" class="game-element" id="reopen" value="Reopen room" hidden="hidden" />
+			<input type="button" class="game-element" id="CrashButton" value="Crash" hidden="hidden" />
 		</div>
 		  
 	</div>
