@@ -1,5 +1,4 @@
 <?php 
-include './host/functions.php';  
 ?>
 <html>
 <head>
@@ -31,7 +30,6 @@ include './host/functions.php';
 			</div>
 			
 			<div id="roomCode" style="display:none;"></div>		
-			<div id="roomCodeInformation" class="game-element">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
 
 			<div id="wait" class="game-element" style="display:none;">Please wait.</div>
 			<div id="yesNo" class="game-element" style="display:none;">
