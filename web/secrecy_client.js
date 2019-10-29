@@ -320,7 +320,7 @@ $(document).ready(function() {
 	
 	$("#reopen").click(function() {		
 		secrecy.sendCommand("reopen");
-		secrecy.hideGameElementsExcept("startGame", "roomCodeInformation", "reopen");
+		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
 		hideAllCheckMarks();
 	});
 	
