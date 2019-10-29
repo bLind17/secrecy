@@ -30,15 +30,14 @@ function reset(timeout, autoRoom = true) {
 }
 
 function buildPlayerList() {
+	var tableHeaders = "<thead>" + "<th>Name</th>";
+	if(secrecy.isHost()) {
+		tableHeaders += "<th><i class='fas fa-check-square'></i></th>" + "<th><i class='fas fa-check-circle'></i></th>";
+	}
+	tableHeaders += "<th>Round</th><th>Score</th>" + "</thead>";
+	
 	$('#playerList').empty();
-	$('#playerList').append($(
-		"<thead>" +
-		"<th>Name</th>" +
-		"<th><i class='fas fa-check-square'></i></th>" +
-		"<th><i class='fas fa-check-circle'></i></th>" +
-		"<th>Score</th>" +
-		"</thead>"
-	));
+	$('#playerList').append($(tableHeaders));
 	
 	secrecy.log("Cleared players.");
 	
@@ -50,14 +49,19 @@ function buildPlayerList() {
 		var player = session.players[id];
 		var name = player.name;	
 		var score = player.score;	
+		var lastScore = player.lastScore > 0 ? "+" + player.lastScore : "";	
 		
 		console.log("Adding: " + name);
-		$('#playerList').append($( "<tr class='player' id='" + id + "'>" 
-		+ "<td>" + name + "</td>"
-		+ "<td><i class='fas fa-check-square collectCheck'></i></td>"
-		+ "<td><i class='fas fa-check-circle guessCheck'></i></td>"
-		+ "<td class='scoreCell'>" + score + "</td>"
-		+ "</tr>" ));
+		
+		var tableContents = "<tr class='player' id='" + id + "'>" 
+		+ "<td>" + name + "</td>";
+		if(secrecy.isHost()) {
+			tableContents += "<td><i class='fas fa-check-square collectCheck'></i></td>"
+			+ "<td><i class='fas fa-check-circle guessCheck'></i></td>"
+		}
+		tableContents += "<td class='lastScoreCell'>" + lastScore + "</td>" + "<td class='scoreCell'>" + score + "</td>" + "</tr>"
+		
+		$('#playerList').append($(tableContents));
 	}
 	$('#playerList').append("</tbody>");
 	hideAllCheckMarks();
@@ -78,8 +82,10 @@ function getSortedPlayerIDs() {
 }
 
 function updatePlayerScore(playerID, round, total) {
-	$("#" + playerID).find(".scoreCell").text("+" + round);
+	$("#" + playerID).find(".lastScoreCell").text("+" + round);
+	$("#" + playerID).find(".scoreCell").text(total);
 	session.players[playerID].score = total;
+	session.players[playerID].lastScore = round;
 }
 
 function playerJoined(name, id, score) {
@@ -190,7 +196,8 @@ secrecy.on("roundEnd", function(params) {
 });
 
 secrecy.on("readyForNewRound", function(params) {
-	secrecy.hideGameElementsExcept("score", "startRound");
+	secrecy.hideGameElementsExcept("score", "startRound", "reopen");
+	buildPlayerList();
 });
 
 secrecy.on("collectionDone", function(params) {

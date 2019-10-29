@@ -41,6 +41,7 @@
 			<div id="score" class="game-element hidden" >
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
+				<table class="table table-striped hidden" id="playerList"></table>
 			</div>
 			<div class="spacer" id="controls">
 				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="startRound" value="Start"  />
