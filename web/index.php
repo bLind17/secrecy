@@ -34,8 +34,8 @@
 
 			<div id="wait" class="game-element d-none" >Please wait.</div>
 			<div id="yesNo" class="game-element d-none spacer" >
-				<input type="button" class="btn btn-lg btn-primary" id="yesButton" value="Yes" />
-				<input type="button" class="btn btn-lg btn-primary" id="noButton" value="No" />
+				<input type="button" class="btn btn-xl btn-primary" id="yesButton" value="Yes" />
+				<input type="button" class="btn btn-xl btn-primary" id="noButton" value="No" />
 			</div>
 			<div id="guess" class="game-element d-none" ></div>
 			<div id="score" class="game-element d-none" >
