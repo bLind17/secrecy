@@ -30,25 +30,25 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<h1><div class="hidden spacer" id="roomCode"></div></h1>
+			<h1><div class="d-none spacer" id="roomCode"></div></h1>
 
-			<div id="wait" class="game-element hidden" >Please wait.</div>
-			<div id="yesNo" class="game-element hidden spacer" >
+			<div id="wait" class="game-element d-none" >Please wait.</div>
+			<div id="yesNo" class="game-element d-none spacer" >
 				<input type="button" class="btn btn-lg btn-primary" id="yesButton" value="Yes" />
 				<input type="button" class="btn btn-lg btn-primary" id="noButton" value="No" />
 			</div>
-			<div id="guess" class="game-element hidden" ></div>
-			<div id="score" class="game-element hidden" >
+			<div id="guess" class="game-element d-none" ></div>
+			<div id="score" class="game-element d-none" >
 				<p id="scoreAnswer">The correct answer is: <span id="correctGuess">0</span>.</p>
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
-				<table class="table table-striped hidden" id="playerList"></table>
+				<table class="table table-striped d-none" id="playerList"></table>
 			</div>
 			<div class="spacer" id="controls">
-				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="startRound" value="Start"  />
-				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="cancelRound" value="Cancel Round"  />
-				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="endRound" value="Score Round"  />
-				<input type="button" class="hidden btn btn-lg btn-secondary game-element" id="reopen" value="Reopen Room"  />
+				<input type="button" class="d-none btn btn-lg btn-secondary game-element" id="startRound" value="Start"  />
+				<input type="button" class="d-none btn btn-lg btn-secondary game-element" id="cancelRound" value="Cancel Round"  />
+				<input type="button" class="d-none btn btn-lg btn-secondary game-element" id="endRound" value="Score Round"  />
+				<input type="button" class="d-none btn btn-lg btn-secondary game-element" id="reopen" value="Reopen Room"  />
 			</div>
 		</div>
 	</div>

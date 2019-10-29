@@ -93,7 +93,7 @@ function playerJoined(name, id, score) {
 		return;
 	}
 	
-	$("#playerList").show();
+	$("#playerList").removeClass("d-none");
 	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
@@ -156,7 +156,7 @@ secrecy.on("collect", function(params) {
 });
 
 secrecy.on("playerSentYesNo", function(params) {
-	$("#" + params[0]).find(".collectCheck").css('visibility', 'visible');
+	$("#" + params[0]).find(".collectCheck").removeClass('d-none');
 });
 
 secrecy.on("guess", function(params) {
@@ -182,7 +182,7 @@ secrecy.on("guessed", function(params) {
 });
 
 secrecy.on("playerSentGuess", function(params) {
-	$("#" + params[0]).find(".guessCheck").css('visibility', 'visible');
+	$("#" + params[0]).find(".guessCheck").removeClass('d-none');
 });
 
 secrecy.on("score", function(params) {
@@ -280,8 +280,8 @@ secrecy.on("rulerInfo", function(params) {
 });
 
 function hideAllCheckMarks() {
-	$(".collectCheck").css('visibility', 'hidden');
-	$(".guessCheck").css('visibility', 'hidden');
+	$(".collectCheck").addClass('d-none');
+	$(".guessCheck").addClass('d-none');
 }
 
 /////

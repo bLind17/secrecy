@@ -128,15 +128,15 @@ secrecy.sendCommand = function(commandKey) {
 * @param elementID DOM ID, #-prefix optional
 */
 secrecy.hideGameElementsExcept = function(elementID) {
-	$(".game-element").hide();
-	
+	$(".game-element").addClass("d-none");
+
 	var args = Array.prototype.slice.call(arguments);
 	for(var i = 0; i < args.length; i++) {
 		elementID = args[i];
 		if(elementID.startsWith("#")) {
 			elementID = elementID.substr(1);
 		}
-		$("#" + elementID).show();
+		$("#" + elementID).removeClass("d-none");
 	}
 }
 
