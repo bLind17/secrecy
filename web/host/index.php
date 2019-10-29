@@ -33,7 +33,7 @@ include 'functions.php';
 		<div class="col-10 offset-1 text-center">
 			<h1><div class="spacer" id="roomCode"></div></h1>
 		
-		<div id="roomCodeInformation" class="game-element spacer">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
+		<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
 			<table class="table table-striped d-none" id="playerList"></table>
 			<div class="spacer" id="controls">
 			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="startRound" value="Start" />
