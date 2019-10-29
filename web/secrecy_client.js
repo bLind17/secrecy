@@ -184,6 +184,7 @@ secrecy.on("score", function(params) {
 	session.ongoingRound = false;
 	$("#pointsQuestion").text(params[0]);
 	$("#pointsGame").text(params[1]);
+	$("#correctGuess").text(params[2]);
     secrecy.hideGameElementsExcept("score");
 });
 

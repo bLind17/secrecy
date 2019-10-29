@@ -39,6 +39,7 @@
 			</div>
 			<div id="guess" class="game-element hidden" ></div>
 			<div id="score" class="game-element hidden" >
+				<p id="scoreAnswer">The correct answer is: <span id="correctGuess">0</span>.</p>
 				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
 				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
 				<table class="table table-striped hidden" id="playerList"></table>
