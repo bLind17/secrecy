@@ -166,22 +166,28 @@ secrecy.setup = function() {
 		if(buttonText1 != "")
 		{
 			$("#dialog-abort").text(buttonText1);
+
 			$("#dialog-abort").click(function() {
 				if(typeof buttonCallback1 === "function")
 					buttonCallback1();
 				$('#dialog').modal('hide');
 			});
+		} else {
+			$("#dialog-abort").text("Close");
 		}
 
 		if(buttonText2 != "")
 		{
 			$("#dialog-ok").text(buttonText2);
-		
+			$("#dialog-ok").removeClass("d-none");
+
 			$("#dialog-ok").click(function() {
 				if(typeof buttonCallback2 === "function")
 					buttonCallback2();
 				$('#dialog').modal('hide');
 			});
+		} else {
+			$("#dialog-ok").addClass("d-none");
 		}
 
 		$("#dialog").modal();
