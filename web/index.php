@@ -23,7 +23,7 @@
 </head>
 <body>
 	<div id="container">
-		<div class="col-10 offset-1">
+		<div class="col-10 offset-1 text-center">
 			<div class="input-group input-group-lg spacer game-element" id="login">
 				<input class="form-control" type="text" id="name" maxlength="18" placeholder="Johnny Dough 😆" />
 				<input class="form-control" type="text" id="joinRoomCode" placeholder="Room code" />

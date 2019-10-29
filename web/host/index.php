@@ -30,7 +30,7 @@ include 'functions.php';
 </head>
 <body>
 	<div id="container">
-		<div class="col-10 offset-1">
+		<div class="col-10 offset-1 text-center">
 			<h1><div class="spacer" id="roomCode"></div></h1>
 		
 		<div id="roomCodeInformation" class="game-element spacer">Go to <a href="../"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt"></i> to join this game!</div>
