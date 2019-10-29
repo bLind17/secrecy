@@ -156,49 +156,33 @@ secrecy.setRoomCode = function(roomCode) {
 * call this when DOM is ready.
 */
 secrecy.setup = function() {
-	// add dialog div to enable dialog showing^^
-	$("body").append($('<div id="dialog" title="Do what?"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span><span id="dialogText">I dunno...<span></p></div>'));
-	
-	// initialize jQuery-UI dialog
-	$("#dialog").dialog({
-		resizable: false,
-		height: "auto",
-		width: 400,
-		modal: true,
-		autoOpen: false,
-		show: "blind",
-		hide: "blind"
-	});
-	
+
 	// enable dialog showing
 	secrecy.showDialog = function(title, message, buttonCallback1, buttonText1, buttonText2, buttonCallback2) {
-		secrecy.log("dialog " + title);
-		$("#dialog").dialog('option', 'title', title);
-		$("#dialogText").text(message);
-		
-		var buttons = {};
-		
-		if(buttonText1 == undefined) {
-			buttonText1 = "OK";
+		$("#dialog-title").text(title);
+		$("#dialog-content").text(message);
+
+		if(buttonText1 != "")
+		{
+			$("#dialog-abort").text(buttonText1);
+			$("#dialog-abort").click(function() {
+				if(typeof buttonCallback1 === "function")
+					buttonCallback1();
+				$('#dialog').modal('hide');
+			});
 		}
 
-		buttons[buttonText1] = function() {
-			$(this).dialog("close");
-			if(buttonCallback1 != null && buttonCallback1 != undefined) {
-				buttonCallback1();
-			}
-		};
+		if(buttonText2 != "")
+		{
+			$("#dialog-ok").text(buttonText2);
 		
-		if(buttonText2 != undefined) {
-			buttons[buttonText2] = function(y, x) {
-				$("#dialog").dialog("close");
-				if(buttonCallback2 != null && buttonCallback2 != undefined) {
+			$("#dialog-ok").click(function() {
+				if(typeof buttonCallback2 === "function")
 					buttonCallback2();
-				}
-			};
+				$('#dialog').modal('hide');
+			});
 		}
-		
-		$("#dialog").dialog('option', 'buttons', buttons);
-		$("#dialog").dialog("open");
+
+		$("#dialog").modal();
 	};
 };
