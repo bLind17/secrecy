@@ -39,9 +39,9 @@
 			</div>
 			<div id="guess" class="game-element d-none" ></div>
 			<div id="score" class="game-element d-none" >
-				<p id="scoreAnswer">The correct answer is: <span id="correctGuess">0</span>.</p>
-				<p id="scoreQuestion">You scored <span id="pointsQuestion">0</span> points this round.</p>
-				<p id="scoreGame">Your total score: <span id="pointsGame">0</span> points!</p>
+				<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
+				<p id="scoreQuestion">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round.</p>
+				<p id="scoreGame">Your total score: <span id="pointsGame" class="badge badge-dark">0</span> points!</p>
 				<table class="table table-striped d-none" id="playerList"></table>
 			</div>
 			<div class="spacer" id="controls">
