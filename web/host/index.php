@@ -31,7 +31,7 @@ include 'functions.php';
 <body>
 	<div id="container">
 		<div class="col-10 offset-1 text-center">
-			<h1><div class="spacer" id="roomCode"></div></h1>
+			<h1><div class="card card-body shadow-sm spacer" id="roomCode"></div></h1>
 		
 		<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
 			<table class="table table-striped d-none" id="playerList"></table>
@@ -83,8 +83,8 @@ include 'functions.php';
 				...
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
 				<button type="button" class="btn btn-primary" id="dialog-ok">Ok</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
 			</div>
 			</div>
 		</div>

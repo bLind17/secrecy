@@ -30,7 +30,7 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<h1><div class="d-none spacer" id="roomCode"></div></h1>
+			<h1><div class="card card-body shadow-sm d-none spacer" id="roomCode"></div></h1>
 
 			<div id="wait" class="game-element d-none" >Please wait.</div>
 			<div id="yesNo" class="game-element d-none spacer" >
@@ -39,7 +39,7 @@
 			</div>
 			<div id="guess" class="game-element d-none" ></div>
 			<div id="score" class="game-element d-none" >
-				<div id="roundScore">
+				<div id="roundScore" class="spacer">
 					<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
 					<p id="scoreQuestion">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round.</p>
 					<p id="scoreGame">Your total score: <span id="pointsGame" class="badge badge-dark">0</span> points!</p>
@@ -88,17 +88,17 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="dialog-title">Modal title</h5>
+				<h5 class="modal-title text-dark" id="dialog-title">Modal title</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body" id="dialog-content">
+			<div class="modal-body text-dark" id="dialog-content">
 				...
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
 				<button type="button" class="btn btn-primary" id="dialog-ok">Ok</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
 			</div>
 			</div>
 		</div>
