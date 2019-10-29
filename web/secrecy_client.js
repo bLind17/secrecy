@@ -94,7 +94,12 @@ function playerJoined(name, id, score) {
 	}
 	
 	$("#playerList").show();
-	secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
+	
+	if(secrecy.isHost() || session.ruler) {
+		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
+	} else {
+		secrecy.hideGameElementsExcept("wait");
+	}
 	
 	session.players[id] = {};
 	session.players[id].name = name;
@@ -193,11 +198,17 @@ secrecy.on("newPlayerScore", function(params) {
 });
 
 secrecy.on("roundEnd", function(params) {
-	secrecy.hideGameElementsExcept();
+	if(secrecy.isHost()) {
+		secrecy.hideGameElementsExcept();
+	}
 });
 
 secrecy.on("readyForNewRound", function(params) {
-	secrecy.hideGameElementsExcept("score", "startRound", "reopen");
+	if(secrecy.isHost() || session.ruler) {
+		secrecy.hideGameElementsExcept("score", "startRound", "reopen");
+	} else {
+		secrecy.hideGameElementsExcept("score");
+	}
 	buildPlayerList();
 });
 
@@ -231,18 +242,20 @@ secrecy.on("started", function(params) {
 	hideAllCheckMarks();
 });
 
-secrecy.on("cancel", function(params) {
+secrecy.on("cancelled", function(params) {
 	session.ongoingRound = false;
-	if(session.ruler){
-		secrecy.hideGameElementsExcept("startRound");
+	
+	if(secrecy.isHost() || session.ruler){
+		secrecy.hideGameElementsExcept("reopen", "startRound");
+		hideAllCheckMarks();
 	} else {
 		secrecy.hideGameElementsExcept("wait");
 	}
 });
-
-secrecy.on("cancelled", function(params) {
+	
+secrecy.on("reopened", function(params) {
+	secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
 	hideAllCheckMarks();
-	secrecy.hideGameElementsExcept("reopen", "startRound");
 });
 			
 secrecy.on("ruler", function(params) {
@@ -323,13 +336,10 @@ $(document).ready(function() {
 	
 	$("#cancelRound").click(function() {
 		secrecy.sendCommand("cancelRound");
-		secrecy.hideGameElementsExcept("startRound");
 	});
 	
 	$("#reopen").click(function() {		
 		secrecy.sendCommand("reopen");
-		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
-		hideAllCheckMarks();
 	});
 	
 	secrecy.setup();
