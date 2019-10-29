@@ -39,10 +39,14 @@
 			</div>
 			<div id="guess" class="game-element d-none" ></div>
 			<div id="score" class="game-element d-none" >
-				<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
-				<p id="scoreQuestion">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round.</p>
-				<p id="scoreGame">Your total score: <span id="pointsGame" class="badge badge-dark">0</span> points!</p>
-				<table class="table table-striped d-none" id="playerList"></table>
+				<div id="roundScore">
+					<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
+					<p id="scoreQuestion">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round.</p>
+					<p id="scoreGame">Your total score: <span id="pointsGame" class="badge badge-dark">0</span> points!</p>
+				</div>
+				<div id="gameScore">
+					<table class="table table-striped d-none" id="playerList"></table>
+				</div>
 			</div>
 			<div class="spacer" id="controls">
 				<input type="button" class="d-none btn btn-lg btn-secondary game-element" id="startRound" value="Start"  />
@@ -78,27 +82,6 @@
 		</ul>
 	</div>
 	</nav>
-
-	<!-- Modal -->
-	<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="Dialog Window" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="dialog-title">Modal title</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body" id="dialog-content">
-				...
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
-				<button type="button" class="btn btn-primary" id="dialog-ok">Save changes</button>
-			</div>
-			</div>
-		</div>
-	</div>
 </body>
 
 <script>

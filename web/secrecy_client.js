@@ -11,6 +11,7 @@ function reset(timeout, autoRoom = true) {
 			}
 		} else {
 			secrecy.hideGameElementsExcept("login");
+			$("#roomCode").hide();
 		}
 	};
 	

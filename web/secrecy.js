@@ -137,6 +137,7 @@ secrecy.hideGameElementsExcept = function(elementID) {
 			elementID = elementID.substr(1);
 		}
 		$("#" + elementID).removeClass("d-none");
+		$("#" + elementID).show();
 	}
 }
 
