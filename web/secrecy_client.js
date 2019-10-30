@@ -163,9 +163,32 @@ secrecy.on("playerSentYesNo", function(params) {
 secrecy.on("guess", function(params) {
 	$('#guess').empty();
 	var playerCount = parseInt(params[0]);
+
+	var guessButtonsHTML = "";
+	var row = "<div class='row justify-content-center'>";
+	var div = "<div class='col-4 col-sm-3 col-md-2 col-lg-1 col-xl-1'>"
+
+	guessButtonsHTML += row;
+
 	for(var i = 0; i <= playerCount; i++) {
-		$("#guess").append($("<input class='guessNumber btn btn-xl btn-primary' type='button' value='" + i + "' />"));
+		if(playerCount == 3 && (i % 3) == 2 && i != 0)
+		{
+			guessButtonsHTML += "</div>";
+			guessButtonsHTML += row;
+		}	
+		else if((i % 3) == 0 && i != 0 && playerCount != 3)
+		{
+			guessButtonsHTML += "</div>";
+			guessButtonsHTML += row;	
+		}
+
+		guessButtonsHTML += div;
+		guessButtonsHTML += guessButton(i);
+		guessButtonsHTML += "</div>";			
 	}
+	guessButtonsHTML += "</div>";
+	
+	$("#guess").html(guessButtonsHTML);
 	$(".guessNumber").click(function() {
 		secrecy.sendCommand("guess:" + $(this).val());
 	});
@@ -176,6 +199,10 @@ secrecy.on("guess", function(params) {
 		secrecy.hideGameElementsExcept("guess");
 	}
 });
+
+function guessButton(number) {
+	return "<input class='guessNumber btn btn-xl btn-primary' type='button' value='" + number + "' />";
+}
 
 secrecy.on("guessed", function(params) {
 	secrecy.hideGameElementsExcept("wait");
