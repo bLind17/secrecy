@@ -1,5 +1,6 @@
 var uuid = require("uuid");
-const utils = require('secrecy_utils');
+var path = require('path');
+const utils = require(path.resolve( __dirname, './secrecy_utils.js'));
 
 class Score {
 	constructor() {

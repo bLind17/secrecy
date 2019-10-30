@@ -1,4 +1,6 @@
-const secrecyServer = require('secrecy_server');
+var path = require('path');
+const secrecyServer = require(path.resolve( __dirname, './secrecy_server.js'));
+
 const WebSocket = require('ws');
 
 /**

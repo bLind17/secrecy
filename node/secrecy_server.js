@@ -1,5 +1,8 @@
-const game = require('secrecy_game');
-const utils = require('secrecy_utils');
+var path = require('path');
+
+const secrecyServer = require(path.resolve( __dirname, './secrecy_server.js'));
+const game = require(path.resolve( __dirname, './secrecy_game.js'));
+const utils = require(path.resolve( __dirname, './secrecy_utils.js'));
 const nodeutil = require('util');
 const fs = require('fs');
 
@@ -76,8 +79,10 @@ server.questionFinished = function(room, question) {
 	console.log("[" + room.roomCode + "] Question finished, calulating score...");
 	question.updateScore(room.score);
 		
+	var correct = question.getCorrectGuess();
+		
 	var rs = room.getRoomSocket();
-	rs.send(utils.createMessage("collectionDone"));
+	rs.send(utils.createMessage("collectionDone", correct));
 	var ruler = room.getRulerSocket();
 	if(ruler != undefined) {
 		ruler.send(utils.createMessage("collectionDone"));
