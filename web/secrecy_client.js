@@ -357,8 +357,12 @@ function hideAllCheckMarks() {
 
 function makeCard(textFront, textBack) {
 	var card = $("#card-template").clone();
-	card.find(".flip-card-front").find(".flip-card-content").text(textFront);
-	card.find(".flip-card-back").find(".flip-card-content").text(textBack);
+	if(textFront !== undefined) {
+		card.find(".flip-card-front").find(".flip-card-content").text(textFront);
+	}
+	if(textBack !== undefined) {
+		card.find(".flip-card-back").find(".flip-card-content").text(textBack);
+	}
 	card.removeClass("d-none");
 	card.removeAttr("id");
 	return card;
@@ -367,13 +371,13 @@ function makeCard(textFront, textBack) {
 function showScoreCards(yesses, noes) {		
 	// Add yes cards
 	for(var i = 0; i < yesses; i++) {
-		var card = makeCard("SECRECY", "Yes");
+		var card = makeCard(undefined, "Yes");
 		card.appendTo("#scoreCardArea");
 	}
 	
 	// Add no cards
 	for(var i = 0; i < noes; i++) {
-		var card = makeCard("SECRECY", "No");
+		var card = makeCard(undefined, "No");
 		card.appendTo("#scoreCardArea");
 	}
 }

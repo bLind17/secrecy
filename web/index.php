@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<script src="./js/jquery-3.4.1.min.js"></script>
-	
 	<script src="./js/jquery-ui.min.js"></script>
-
 	<script src="./js/bootstrap.js"></script>
 
+	<link rel="shortcut icon" href="./img/favicon.ico">
+	
 	<script>
 		var css_folder = "./css/";
 	</script>
