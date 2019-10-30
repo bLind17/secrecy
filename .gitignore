@@ -10,3 +10,5 @@ node/node_modules/.bin/
 node/.htaccess
 
 web/settings.js
+
+logs.txt
