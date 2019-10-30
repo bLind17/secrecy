@@ -11,7 +11,11 @@
 	<script src="./js/jquery-ui.min.js"></script>
 
 	<script src="./js/bootstrap.js"></script>
-	<link href="./css/bootstrap.css" rel="stylesheet">
+
+	<script>
+		var css_folder = "./css/";
+	</script>
+	<link href="./css/bootstrap.css" id="theme-sheet" rel="stylesheet" type="text/css">
 
 	<link href="./css/style.css" rel="stylesheet">
 	<link href="./css/dark-mode.css" rel="stylesheet">
@@ -30,7 +34,7 @@
 				<input class="btn btn-lg btn-primary btn-block spacer" type="button" id="joinButton" value="Join" />
 			</div>
 			
-			<h1><div class="card card-body shadow-sm d-none spacer" id="roomCode"></div></h1>
+			<h1><div class="d-none spacer" id="roomCode"></div></h1>
 
 			<div id="wait" class="game-element d-none" >Please wait.</div>
 			<div id="yesNo" class="game-element d-none spacer" >
@@ -88,12 +92,12 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title text-dark" id="dialog-title">Modal title</h5>
+				<h5 class="modal-title" id="dialog-title">Modal title</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body text-dark" id="dialog-content">
+			<div class="modal-body" id="dialog-content">
 				...
 			</div>
 			<div class="modal-footer">

@@ -12,24 +12,20 @@
       darkSwitch.checked = darkThemeSelected;
       if(darkThemeSelected)
       {
-        document.body.setAttribute("data-theme", "dark")
-        $("#playerList").addClass("table-dark");
+        $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
       }
       else
       {
-        document.body.removeAttribute("data-theme");
-        $("#playerList").removeClass("table-dark");
+        $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
       }
     }
     function resetTheme() {
       if (darkSwitch.checked) {
-        document.body.setAttribute("data-theme", "dark");
+        $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
         localStorage.setItem("darkSwitch", "dark");
-        $("#playerList").addClass("table-dark");
       } else {
-        document.body.removeAttribute("data-theme");
+        $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
         localStorage.removeItem("darkSwitch");
-        $("#playerList").removeClass("table-dark");
       }
     }
   }

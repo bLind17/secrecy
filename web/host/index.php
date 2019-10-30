@@ -13,11 +13,13 @@ include 'functions.php';
 	<script src="../js/jquery-ui.min.js"></script>
 
 	<script src="../js/bootstrap.js"></script>
-	<link href="../css/bootstrap.css" rel="stylesheet">
+	<script>
+		var css_folder = "../css/";
+	</script>
+	<link href="../css/bootstrap.css" id="theme-sheet" rel="stylesheet" type="text/css">
 
 	<link href="../css/style.css" rel="stylesheet">
 	<link href="../css/flipCard.css" rel="stylesheet">
-	<link href="../css/dark-mode.css" rel="stylesheet">
 	<link href="../css/fa-all.css" rel="stylesheet">
 
 	<script src="../settings.js"></script>
@@ -32,7 +34,7 @@ include 'functions.php';
 <body>
 	<div id="container">
 		<div id="gameArea" class="col-10 offset-1 text-center">
-			<h1><div class="card card-body shadow-sm spacer" id="roomCode"></div></h1>
+			<h1><div class="spacer" id="roomCode"></div></h1>
 		
 			<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
 			<div id="scoreCardArea" class="spacer"></div>
