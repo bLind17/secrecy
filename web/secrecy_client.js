@@ -118,6 +118,7 @@ function playerLeft(id) {
 }
 
 function startRound() {
+	removeScoreCards();
 	secrecy.sendCommand("start");
 	secrecy.hideGameElementsExcept("cancelRound");
 }
@@ -257,7 +258,6 @@ secrecy.on("showScoreCards", function(params) {
 		setTimeout(revealScoreCards, 1000);	
 		setTimeout(function() {
 			$("#playerList").toggleClass("d-none");
-			removeScoreCards();
 			secrecy.sendCommand("endround");
 		}, 3000);
 	}
@@ -301,6 +301,7 @@ secrecy.on("cancelled", function(params) {
 });
 	
 secrecy.on("reopened", function(params) {
+	removeScoreCards();
 	secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
 	hideAllCheckMarks();
 });

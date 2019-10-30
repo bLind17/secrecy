@@ -292,8 +292,9 @@ server.onCommand = function(ws, command, params) {
 		if(player.ws != rs && player.ws != room.getRulerSocket()) {
 			player.ws.send(utils.createMessage("info", "You are not allowed to do that."));
 			return;
-		}	var room = game.getPlayerRoom(player.playerID);
+		}	
 		
+		var room = game.getPlayerRoom(player.playerID);
 		rs.send(utils.createMessage("showScoreCards"));
 		room.sendToAll(utils.createMessage("showScoreCards"));
 		return;
