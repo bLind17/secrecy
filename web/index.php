@@ -36,7 +36,7 @@
 			
 			<h1><div class="d-none spacer" id="roomCode"></div></h1>
 
-			<div id="wait" class="game-element d-none" >Please wait.</div>
+			<div id="infoText"></div>
 			<div id="yesNo" class="game-element d-none spacer" >
 				<input type="button" class="btn btn-xl btn-primary" id="yesButton" value="Yes" />
 				<input type="button" class="btn btn-xl btn-primary" id="noButton" value="No" />

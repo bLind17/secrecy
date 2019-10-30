@@ -4,6 +4,8 @@ function reset(timeout, autoRoom = true) {
 	session = {};
 	session.players = {};
 	
+	setInfoText("");
+	
 	secrecy.onWsOpen = function () {
 		if(secrecy.isHost()) {
 			if(autoRoom) {
@@ -98,8 +100,6 @@ function playerJoined(name, id, score) {
 	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
-	} else {
-		secrecy.hideGameElementsExcept("wait");
 	}
 	
 	session.players[id] = {};
@@ -130,7 +130,12 @@ function showRoundStartDialog() {
 	secrecy.showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startRound, "Yes", "No");
 }
 
+function setInfoText(text) {
+	$("#infoText").text(text);
+}
+
 secrecy.on("created", function(params) {
+	removeScoreCards();
 	secrecy.sendCommand("join", params[0], "ROOM");
 	secrecy.setRoomCode(params[0]);
 	secrecy.hideGameElementsExcept("roomCodeInformation");
@@ -142,7 +147,8 @@ secrecy.on("playerJoined", function(params) {
 
 secrecy.on("joined", function(params) {
 	secrecy.setRoomCode(params[0]);
-	secrecy.hideGameElementsExcept("wait", "roomCode");
+	setInfoText("Welcome!");
+	secrecy.hideGameElementsExcept("roomCode");
 });
 
 secrecy.on("playerLeft", function(params) {
@@ -153,6 +159,8 @@ secrecy.on("collect", function(params) {
 	session.hasBeenStarted = true;
 	session.ongoingRound = true;
 
+	setInfoText("Please answer the question truthfully.");
+	
 	if(session.ruler){
 		secrecy.hideGameElementsExcept("yesNo", "cancelRound");
 	} else {
@@ -197,6 +205,8 @@ secrecy.on("guess", function(params) {
 		secrecy.sendCommand("guess:" + $(this).val());
 	});
 	
+	setInfoText("How many players do you think answered with 'yes'?");
+	
 	if(session.ruler){
 		secrecy.hideGameElementsExcept("guess", "cancelRound");
 	} else {
@@ -209,7 +219,7 @@ function guessButton(number) {
 }
 
 secrecy.on("guessed", function(params) {
-	secrecy.hideGameElementsExcept("wait");
+	secrecy.hideGameElementsExcept();
 	$("#guess").empty();
 });
 
@@ -242,6 +252,7 @@ secrecy.on("readyForNewRound", function(params) {
 		secrecy.hideGameElementsExcept("score");
 	}
 	buildPlayerList();
+	setInfoText("");
 });
 
 secrecy.on("collectionDone", function(params) {
@@ -252,11 +263,14 @@ secrecy.on("collectionDone", function(params) {
 	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.hideGameElementsExcept("endRound");
+		setInfoText("Please press the button when everybody is ready to see the answers!");
+	} else {
+		setInfoText("Please wait for the host to reveal the score.");
 	}
 });
 
 secrecy.on("showScoreCards", function(params) {
-	secrecy.hideGameElementsExcept("wait");
+	secrecy.hideGameElementsExcept();
 	
 	if(secrecy.isHost()) {
 		setTimeout(revealScoreCards, 1000);	
@@ -301,14 +315,18 @@ secrecy.on("cancelled", function(params) {
 		secrecy.hideGameElementsExcept("reopen", "startRound");
 		hideAllCheckMarks();
 	} else {
-		secrecy.hideGameElementsExcept("wait");
+		secrecy.hideGameElementsExcept();
 	}
 });
 	
 secrecy.on("reopened", function(params) {
-	removeScoreCards();
-	secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
-	hideAllCheckMarks();
+	if(secrecy.isHost() || session.ruler) {
+		removeScoreCards();
+		secrecy.hideGameElementsExcept("startRound", "roomCodeInformation");
+		hideAllCheckMarks();
+	}
+	
+	setInfoText("Other players may join now.");
 });
 			
 secrecy.on("ruler", function(params) {
@@ -366,6 +384,7 @@ function revealScoreCards() {
 
 function removeScoreCards() {
 	$("#scoreCardArea>.flip-card-flipped").remove();
+	$("#scoreCardArea>.flip-card").remove();
 }
 
 /////

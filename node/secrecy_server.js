@@ -84,10 +84,7 @@ server.questionFinished = function(room, question) {
 		
 	var rs = room.getRoomSocket();
 	rs.send(utils.createMessage("collectionDone", yesses, noes));
-	var ruler = room.getRulerSocket();
-	if(ruler != undefined) {
-		ruler.send(utils.createMessage("collectionDone"));
-	}
+	room.sendToAll(utils.createMessage("collectionDone"));
 }
 
 server.writeLog = function(text) {
