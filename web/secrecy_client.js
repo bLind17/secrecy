@@ -214,7 +214,26 @@ secrecy.on("readyForNewRound", function(params) {
 });
 
 secrecy.on("collectionDone", function(params) {
-	secrecy.hideGameElementsExcept("endRound");
+	if(secrecy.isHost()) {
+		showScoreCards(params[0], params[1]);
+		$("#playerList").toggleClass("d-none");
+	}
+	
+	if(secrecy.isHost() || session.ruler) {
+		secrecy.hideGameElementsExcept("endRound");
+	}
+});
+
+secrecy.on("showScoreCards", function(params) {
+	if(secrecy.isHost()) {
+		secrecy.hideGameElementsExcept("wait");
+		setTimeout(revealScoreCards, 1000);	
+		setTimeout(function() {
+			$("#playerList").toggleClass("d-none");
+			removeScoreCards();
+			secrecy.sendCommand("endround");
+		}, 3000);
+	}
 });
 
 secrecy.on("bye", function(params) {
@@ -285,6 +304,37 @@ function hideAllCheckMarks() {
 	$(".guessCheck").addClass('d-none');
 }
 
+function makeCard(textFront, textBack) {
+	var card = $("#card-template").clone();
+	card.find(".flip-card-front").find(".flip-card-content").text(textFront);
+	card.find(".flip-card-back").find(".flip-card-content").text(textBack);
+	card.removeClass("d-none");
+	card.removeAttr("id");
+	return card;
+}
+
+function showScoreCards(yesses, noes) {		
+	// Add yes cards
+	for(var i = 0; i < yesses; i++) {
+		var card = makeCard("SECRECY", "Yes");
+		card.appendTo("#scoreCardArea");
+	}
+	
+	// Add no cards
+	for(var i = 0; i < noes; i++) {
+		var card = makeCard("SECRECY", "No");
+		card.appendTo("#scoreCardArea");
+	}
+}
+
+function revealScoreCards() {
+	$("#scoreCardArea>.flip-card").toggleClass('flip-card flip-card-flipped');
+}
+
+function removeScoreCards() {
+	$("#scoreCardArea>.flip-card-flipped").remove();
+}
+
 /////
 ///// ON READY
 /////
@@ -332,7 +382,8 @@ $(document).ready(function() {
 	});
 	
 	$("#endRound").click(function() {
-		secrecy.sendCommand("endround");
+		showScoreCards();
+		secrecy.sendCommand("showScoreCards");
 	});	
 	
 	$("#cancelRound").click(function() {

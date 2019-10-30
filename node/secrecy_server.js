@@ -79,10 +79,11 @@ server.questionFinished = function(room, question) {
 	console.log("[" + room.roomCode + "] Question finished, calulating score...");
 	question.updateScore(room.score);
 		
-	var correct = question.getCorrectGuess();
+	var yesses = question.getCorrectGuess();
+	var noes = question.getYesNoCount() - yesses;
 		
 	var rs = room.getRoomSocket();
-	rs.send(utils.createMessage("collectionDone", correct));
+	rs.send(utils.createMessage("collectionDone", yesses, noes));
 	var ruler = room.getRulerSocket();
 	if(ruler != undefined) {
 		ruler.send(utils.createMessage("collectionDone"));
@@ -183,7 +184,6 @@ server.onCommand = function(ws, command, params) {
 	}
 	
 	if(command == "reopen") {
-		var room = game.getPlayerRoom(player.playerID);
 		if(room == undefined) {
 			player.ws.send(utils.createMessage("info", "You must BE a room first."));
 			return;
@@ -273,19 +273,31 @@ server.onCommand = function(ws, command, params) {
 			room.sendToAll(utils.createMessage("newPlayerScore", player.playerID, room.score.getLastRoundsPoints(playerID), room.score.getPoints(playerID)));
 		}	
 		
-		rs.send(utils.createMessage("roundEnd"));
-		room.sendToAll(utils.createMessage("roundEnd"));
-		
 		room.question = undefined;
 		
-		setTimeout(function() {
-			rs.send(utils.createMessage("readyForNewRound"));
-			room.sendToAll(utils.createMessage("readyForNewRound"));
-		}, 3000);
+		rs.send(utils.createMessage("readyForNewRound"));
+		room.sendToAll(utils.createMessage("readyForNewRound"));
 		
 		return;
 	}
-
+	
+	if(command == "showScoreCards") {
+		var room = game.getPlayerRoom(player.playerID);
+		if(room == undefined) {
+			player.ws.send(utils.createMessage("info", "You must BE a room first."));
+			return;
+		}
+		
+		var rs = room.getRoomSocket();
+		if(player.ws != rs && player.ws != room.getRulerSocket()) {
+			player.ws.send(utils.createMessage("info", "You are not allowed to do that."));
+			return;
+		}	var room = game.getPlayerRoom(player.playerID);
+		
+		rs.send(utils.createMessage("showScoreCards"));
+		room.sendToAll(utils.createMessage("showScoreCards"));
+		return;
+	}
 }
 
 server.handleSocketClient = function(ws) {
@@ -344,6 +356,7 @@ server.handleSocketClient = function(ws) {
 			params = splitsies[1].split(';');
 		}	
 		
+		console.log(command);
 		server.onCommand(ws, command, params);
 	});
 	

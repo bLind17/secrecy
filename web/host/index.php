@@ -16,6 +16,7 @@ include 'functions.php';
 	<link href="../css/bootstrap.css" rel="stylesheet">
 
 	<link href="../css/style.css" rel="stylesheet">
+	<link href="../css/flipCard.css" rel="stylesheet">
 	<link href="../css/dark-mode.css" rel="stylesheet">
 	<link href="../css/fa-all.css" rel="stylesheet">
 
@@ -30,17 +31,18 @@ include 'functions.php';
 </head>
 <body>
 	<div id="container">
-		<div class="col-10 offset-1 text-center">
+		<div id="gameArea" class="col-10 offset-1 text-center">
 			<h1><div class="card card-body shadow-sm spacer" id="roomCode"></div></h1>
 		
-		<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
+			<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
+			<div id="scoreCardArea" class="spacer"></div>
 			<table class="table table-striped d-none" id="playerList"></table>
 			<div class="spacer" id="controls">
-			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="startRound" value="Start" />
-			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="endRound" value="Score Round" />
-			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="cancelRound" value="Cancel Round" />
-			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="reopen" value="Reopen Room" />
-			<input type="button" class="game-element d-none btn btn-lg btn-primary" id="CrashButton" value="Crash" />
+				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="startRound" value="Start" />
+				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="endRound" value="Score Round" />
+				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="cancelRound" value="Cancel Round" />
+				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="reopen" value="Reopen Room" />
+				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="CrashButton" value="Crash" />
 			</div>
 		</div>
 	</div>
@@ -86,6 +88,22 @@ include 'functions.php';
 				<button type="button" class="btn btn-primary" id="dialog-ok">Ok</button>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="dialog-abort">Close</button>
 			</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Card Template -->
+	<div id="card-template" class="flip-card d-none">
+		<div class="flip-card-inner card">
+			<div class="flip-card-front card-body">
+				<div class="flip-card-content">
+					Hello
+				</div>
+			</div>
+			<div class="flip-card-back card-body">
+				<div class="flip-card-content">
+					Bye
+				</div>
 			</div>
 		</div>
 	</div>
