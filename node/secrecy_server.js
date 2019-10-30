@@ -184,6 +184,7 @@ server.onCommand = function(ws, command, params) {
 	}
 	
 	if(command == "reopen") {
+		var room = game.getPlayerRoom(player.playerID);
 		if(room == undefined) {
 			player.ws.send(utils.createMessage("info", "You must BE a room first."));
 			return;

@@ -114,11 +114,14 @@ function playerLeft(id) {
 	}
 	
 	delete session.players[id];
+	if(Object.keys(session.players).length == 0) {
+		secrecy.sendCommand("reopen");
+	}
+	
 	buildPlayerList();
 }
 
 function startRound() {
-	removeScoreCards();
 	secrecy.sendCommand("start");
 	secrecy.hideGameElementsExcept("cancelRound");
 }
@@ -253,8 +256,9 @@ secrecy.on("collectionDone", function(params) {
 });
 
 secrecy.on("showScoreCards", function(params) {
+	secrecy.hideGameElementsExcept("wait");
+	
 	if(secrecy.isHost()) {
-		secrecy.hideGameElementsExcept("wait");
 		setTimeout(revealScoreCards, 1000);	
 		setTimeout(function() {
 			$("#playerList").toggleClass("d-none");
@@ -284,6 +288,7 @@ secrecy.on("exhausted", function(params) {
 });
 
 secrecy.on("started", function(params) {
+	removeScoreCards();
 	session.hasBeenStarted = true;
 	secrecy.hideGameElementsExcept("cancelRound");
 	hideAllCheckMarks();
@@ -410,7 +415,6 @@ $(document).ready(function() {
 	});
 	
 	$("#endRound").click(function() {
-		showScoreCards();
 		secrecy.sendCommand("showScoreCards");
 	});	
 	

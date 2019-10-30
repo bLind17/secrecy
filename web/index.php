@@ -45,8 +45,8 @@
 			<div id="score" class="game-element d-none" >
 				<div id="roundScore" class="spacer">
 					<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
-					<p id="scoreQuestion">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round.</p>
-					<p id="scoreGame">Your total score: <span id="pointsGame" class="badge badge-dark">0</span> points!</p>
+					<span id="scoreQuestion" class="d-none">You scored <span id="pointsQuestion" class="badge badge-secondary">0</span> points this round, </span>
+					<span id="scoreGame" class="d-none">giving you a total of <span id="pointsGame" class="badge badge-dark">0</span> points!</span>
 				</div>
 				<div id="gameScore">
 					<table class="table table-striped d-none" id="playerList"></table>
