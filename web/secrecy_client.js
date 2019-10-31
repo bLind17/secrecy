@@ -434,24 +434,26 @@ function shuffleArray(array) {
 		const temp = arr[i]
 		arr[i] = arr[j]
 		arr[j] = temp
-	  }
+	}
 	return arr;
 }
 
 function revealScoreCards(number_of_cards, callback_function) {
-	revealScoreCard(0, number_of_cards)
+	revealScoreCard(0, number_of_cards, callback_function)
 
 	// callback after all cards have been revealed
-	setTimeout(callback_function, number_of_cards * timeout);
+	//setTimeout(callback_function, number_of_cards * timeout);
 }
 
-function revealScoreCard(card_index, number_of_cards) {
+function revealScoreCard(card_index, number_of_cards, callback_function) {
 	console.log("revealScoreCard: " + card_index);
 	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
 	let next_card = card_index + 1;
-	if(next_card >= number_of_cards)
+	if(next_card >= number_of_cards) {
+		setTimeout(callback_function, timeout);
 		return;
-		setTimeout(revealScoreCard, timeout, next_card, number_of_cards);
+	}
+	setTimeout(revealScoreCard, timeout, next_card, number_of_cards, callback_function);
 }
 
 function removeScoreCards() {
