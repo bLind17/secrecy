@@ -449,28 +449,41 @@ function revealScoreCards(number_of_cards, callback_function) {
 	if(addMoreCardsForTesting != undefined) {
 		number_of_cards = parseInt(number_of_cards) + addMoreCardsForTesting;
 	}
-	console.log("Got " + number_of_cards + " cards.");
 	
 	revealScoreCard(0, number_of_cards, callback_function)
-
-	// callback after all cards have been revealed
-	//setTimeout(callback_function, number_of_cards * timeout);
 }
 
 function revealScoreCard(card_index, number_of_cards, callback_function) {
-	console.log("revealScoreCard: " + card_index);
 	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
 	let next_card = card_index + 1;
+	let next_card_timeout = calculateScoreCardTimeout(timeout, next_card, number_of_cards);
 	if(next_card >= number_of_cards) {
 		setTimeout(callback_function, timeout);
 		return;
 	}
-	setTimeout(revealScoreCard, timeout, next_card, number_of_cards, callback_function);
+	setTimeout(revealScoreCard, next_card_timeout, next_card, number_of_cards, callback_function);
 }
 
 function removeScoreCards() {
 	$("#scoreCardArea>.flip-card-flipped").remove();
 	$("#scoreCardArea>.flip-card").remove();
+}
+
+function calculateScoreCardTimeout(baseTimeout, index, maxIndex) {
+	if(timeoutSpeedupFactor == undefined) {
+		var timeoutSpeedupFactor = 0.4;
+	}
+	
+	if(timout_minimum == undefined) {
+		var timout_minimum = 100;
+	}
+	
+	let midPoint = Math.round(maxIndex / 2);
+	let distanceFromMidpoint = Math.abs(midPoint - index);
+	let offsetStep = Math.ceil(baseTimeout * timeoutSpeedupFactor);
+	let suggestedTimout = baseTimeout - (midPoint - distanceFromMidpoint) * offsetStep;
+	
+	return Math.max(suggestedTimout, timout_minimum);
 }
 
 /////
