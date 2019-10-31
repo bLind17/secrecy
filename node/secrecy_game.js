@@ -2,16 +2,67 @@ var uuid = require("uuid");
 var path = require('path');
 const utils = require(path.resolve( __dirname, './secrecy_utils.js'));
 
+/**
+* Score class keeps track of the score of a game
+* while also remembering the score delta of the last round
+*/
 class Score {
 	constructor() {
+		/**
+		* A collection of playerIDs -> points
+		* States the current score a player has achieved
+		*/
 		this.points = {};
+		/**
+		* A collection of playerIDs -> points
+		* States the score a player has achieved during the last round
+		*/
 		this.lastRoundsPoints = {};
+		/**
+		* Deleted scores
+		* When a player leaves, their points will be stowed away here, in case they come back
+		*/
+		this.deletedScores = {};
 	}
 	
+	/**
+	* Removes a player's score from the active point collection
+	* To the collection for deleted player's points
+	* @param playerID player's id
+	*/
 	deleteScore(playerID) {
+		this.deletedScores[playerID] = this.points[playerID];
 		delete this.points[playerID];
 	}
 	
+	/**
+	* Checks if the given player has had a score before but left.
+	* @param playerID player's id
+	* @return true if player has a score that has been deleted
+	*/
+	hasDeletedScore(playerID) {
+		return this.deletedScores[playerID] != undefined;
+	}
+	
+	/**
+	* Iff the given player has an entry in the deleted score list,
+	* their old score will be given to them again.
+	* @param playerID player's id
+	*/
+	reactivateDeletedScore(playerID) {
+		if(!hasDeletedScore(playerID)) {
+			return;
+		}
+		
+		thie.points[playerID] = this.deletedScores[playerID];
+		delete this.deletedScores[playerID];
+	}
+	
+	/**
+	* Sets the points for a player to a fixed value
+	* @param playerID player's id
+	* @param points new score
+	*/
 	setPoints(playerID, points) {
 		if(this.points[playerID] == undefined) {
 			this.points[playerID] = 0;
@@ -21,6 +72,11 @@ class Score {
 		this.lastRoundsPoints[playerID] = points;
 	}
 	
+	/**
+	* Adds a number of points to the points already scored
+	* @param playerID player's id
+	* @param points new score
+	*/
 	addPoints(playerID, points) {
 		if(this.points[playerID] == undefined) {
 			this.points[playerID] = 0;
@@ -30,6 +86,11 @@ class Score {
 		this.lastRoundsPoints[playerID] = points;
 	}
 	
+	/**
+	* Retrieve the score of a player
+	* @param playerID player's id
+	* @return score of a player
+	*/
 	getPoints(playerID) {
 		if(this.points[playerID] == undefined) {
 			return 0;
@@ -38,11 +99,48 @@ class Score {
 		return this.points[playerID];
 	}
 	
+	/**
+	* Calculates the average score of all active players
+	* @return average score
+	*/
 	getAveragePoints() {
-		var sum = 0;
-		var count = 0;
+		return this.__getAverage(this.points);
+	}
+	
+	/**
+	* Calculates the minimum score of all players (even the idle ones)
+	* @return minimum score of all players
+	*/
+	getMinimumPoints() {
+		var min = -1;
+		
 		for(var playerID in this.points) {
 			var points = this.points[playerID];
+			if(min < 0 || points < min) {
+				min = points;
+			}
+		}
+		
+		for(var playerID in this.deletedScores) {
+			var points = this.deletedScores[playerID];
+			if(min < 0 || points < min) {
+				min = points;
+			}
+		}
+		
+		return Math.max(min, 0);
+	}
+	
+	/**
+	* Calculates the average score of all players in the given map
+	* @param collection a map of scores (key -> numeric value)
+	* @return average score, rounded
+	*/
+	__getAverage(collection) {
+		var sum = 0;
+		var count = 0;
+		for(var playerID in collection) {
+			var points = collection[playerID];
 			sum += points;
 			count++;
 		}
@@ -54,10 +152,40 @@ class Score {
 		return Math.round(sum/count);
 	}
 	
-	resetLastRoundsPoints() {
+	/**
+	* The score class remembers the points that were scored last round,
+	* but has no concept of what a round is.
+	* This method basically tells the score that the current round started.
+	*
+	* When a round starts, the last round's scores will be forgotten
+	* When a round ends, idle players will be rewarded with the average round score
+	* so that they can keep up, if their device fails or they need to take a break.
+	*/
+	startUpdate() {
 		this.lastRoundsPoints = {};	
 	}
 	
+	/**
+	* The score class remembers the points that were scored last round,
+	* but has no concept of what a round is.
+	* This method basically tells the score that the current round ended.
+	*
+	* When a round starts, the last round's scores will be forgotten
+	* When a round ends, idle players will be rewarded with the average round score
+	* so that they can keep up, if their device fails or they need to take a break.
+	*/
+	endUpdate() {
+		var averageRoundScore = this.__getAverage(this.lastRoundsPoints);
+		for(var playerID in this.deletedScores) {
+			this.deletedScores[playerID] += averageRoundScore;
+		}
+	}
+	
+	/**
+	* Retrieve the delta points for a player scored during the last round
+	* @param playerID the player's id
+	* @return points the player scored last round
+	*/
 	getLastRoundsPoints(playerID) {
 		if(this.lastRoundsPoints[playerID] == undefined) {
 			return 0;
@@ -99,7 +227,7 @@ class Question {
 	}
 	
 	updateScore(score) {
-		score.resetLastRoundsPoints();
+		score.startUpdate();
 		
 		var correctGuess = this.getCorrectGuess();
 		
@@ -115,6 +243,8 @@ class Question {
 				score.addPoints(playerID, 1);
 			}
 		}
+		
+		score.endUpdate();
 	}
 }
 
@@ -250,17 +380,23 @@ class Room {
 				
 		var player = this.game.getPlayer(playerID);
 		this.players[playerID] = player;
-		this.game.setPlayerRoom(playerID, this);
 		
-		var average = this.score.getAveragePoints();
-		var points = Math.max(average - 2, 0);
-		this.score.setPoints(playerID, points);
+		if(this.score.hasDeletedScore(playerID)) {
+			this.score.reactivateDeletedScore(playerID);
+		} else {
+			var minimum = this.score.getMinimumPoints();
+			this.score.setPoints(playerID, minimum);
+		}
 		
 		return player;
 	}
 	
 	playerLeft(playerID) {		
 		var player = this.players[playerID];
+		if(player == undefined) {
+			return;
+		}
+		
 		delete this.players[playerID];
 		this.score.deleteScore(playerID);
 		if(player.getName() != undefined) {
@@ -303,6 +439,8 @@ class Game {
 		// collection of players and their respective room (if joined)
 		// maps from playerID to a room (playerID -> code)
 		this.playerRooms = {};
+		// collection of IDs that were valid once but left.
+		this.deletedIDs = [];
 		
 		this._roomCreatesPerSecond = new Array(60).fill(0);
 		this._roomCreatesCursor = 0;
@@ -365,16 +503,53 @@ class Game {
 		}
 	}
 	
+	unregisterPlayer(playerID) {
+		var player = this.players[playerID];
+		delete this.players[playerID];
+		delete this.playerRooms[playerID];
+		this.deletedIDs.push(playerID);
+		console.log("[GAME] Player unregistered: " + player.getName());
+	}
+	
+	isDeletedPlayerID(playerID) {
+		return playerID in this.deletedIDs;
+	}
+	
+	resetPlayerID(player, newPlayerID) {
+		if(!isDeletedPlayerID(player.playerID)) {
+			return;
+		}
+		
+		var oldPlayerID = player.playerID;
+		
+		var room = this.playerRooms[oldPlayerID];
+		if(room != undefined) {
+			// only allowed for players who did not join any rooms yet
+			return;
+		}
+		
+		// update player list
+		delete this.players[oldPlayerID];
+		this.players[newPlayerID] = player;
+		
+		// update room list
+		delete this.playerRooms[oldPlayerID];
+		this.playerRooms[newPlayerID] = room;
+		
+		// update player and socket
+		player.playerID = newPlayerID;
+		ws.secGameID = newPlayerID;
+		
+		// remove oldPlayerID from deleted IDs
+		this.deletedIDs.filter(function(element) { return element != oldPlayerID });
+	}
+	
 	getPlayer(playerID) {
 		return this.players[playerID];
 	}
 	
 	setPlayerRoom(playerID, room) {
 		this.playerRooms[playerID] = room;
-	}
-	
-	unsetPlayerRoom(playerID) {
-		delete this.playerRooms[playerID];
 	}
 	
 	getPlayerRoom(playerID) {
@@ -428,10 +603,22 @@ class Game {
 		
 		for(var id in room.players) {
 			room.players[id].ws.close();
-			this.unsetPlayerRoom(id);
+			this.unregisterPlayer(id);
 		}
 		
 		delete this.rooms[room.roomCode];
+		
+		this.logStatus();
+	}
+	
+	logStatus() {
+		var roomCount = Object.keys(this.rooms).length;
+		var playerCount = Object.keys(this.players).length;
+		var playersInRoomsCount = Object.keys(this.playerRooms).length;
+		
+		console.log("Open rooms: " + roomCount);
+		console.log("Players online: " + playerCount);
+		console.log("Players ingame: " + playersInRoomsCount);
 	}
 }
 

@@ -42,15 +42,16 @@ server.onJoin = function(player, params) {
 		return;
 	} else if (room.isLobby()) {
 		var player = room.playerJoin(player.playerID);
+		game.setPlayerRoom(player.playerID, room);
 		
 		// inform room of new player
 		var rs = room.getRoomSocket();
 		rs.send(utils.createMessage("playerJoined", player.getName(), player.playerID, room.score.getPoints(player.playerID)));
 		
 		// inform player that join worked
-		player.ws.send(utils.createMessage("joined", roomName));
+		player.ws.send(utils.createMessage("joined", roomName, player.playerID));
 		
-		// inform other players of new player
+		// inform players of new player
 		room.sendToAll(utils.createMessage("playerJoined", player.getName(), player.playerID, room.score.getPoints(player.playerID)));
 		
 		// inform new player of old players
@@ -297,6 +298,16 @@ server.onCommand = function(ws, command, params) {
 		room.sendToAll(utils.createMessage("showScoreCards"));
 		return;
 	}
+	
+	if(command == "resetMyID") {
+		var newPlayerID = params[0];
+		if(!game.isDeletedPlayerID(newPlayerID)) {
+			player.ws.send(utils.createMessage("info", "You are not allowed to do that."));
+			return;
+		}
+		
+		game.resetPlayerID(player, newPlayerID);
+	}
 }
 
 server.handleSocketClient = function(ws) {
@@ -310,9 +321,13 @@ server.handleSocketClient = function(ws) {
 		console.log('[SERVER] Got close!');
 		
 		var room = game.getPlayerRoom(playerID);
+		game.unregisterPlayer(playerID); // do this always, but only after we got the room
+		
 		if(room == undefined) {
 			return;
 		}
+						
+		room.playerLeft(playerID);
 		
 		var rs = room.getRoomSocket();
 		if(rs == ws || room.isEmpty()) {
@@ -333,9 +348,6 @@ server.handleSocketClient = function(ws) {
 		}
 		
 		server.writeLog(nodeutil.format("Room %s player left.", room.roomCode));
-				
-		room.playerLeft(playerID);
-		game.unsetPlayerRoom(playerID);
 		
 		if(room.getRulerSocket() == player.ws) {
 			var newRuler = room.getRandomPlayer();
