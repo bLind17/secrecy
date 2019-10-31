@@ -293,7 +293,7 @@ secrecy.on("readyForNewRound", function(params) {
 
 secrecy.on("collectionDone", function(params) {	
 	if(secrecy.isHost() || session.ruler) {
-		secrecy.hideGameElementsExcept("endRound");
+		secrecy.hideGameElementsExcept("endRound", "scoreCardArea");
 		setInfoText("Please press the button when everybody is ready to see the answers!");
 	} else {
 		setInfoText("Please wait for the host to reveal the score.");

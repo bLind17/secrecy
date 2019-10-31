@@ -131,13 +131,6 @@ secrecy.sendCommand = function(commandKey) {
 * @param elementID DOM ID, #-prefix optional
 */
 secrecy.hideGameElementsExcept = function(elementID) {
-	$(".game-element").each(function() {
-		$(this).attr("secrecy_display_style", $(this).css('display'));
-		$(this).css('display', 'none');
-	});
-	
-	$(".game-element").addClass("d-none");
-
 	var args = Array.prototype.slice.call(arguments);
 	for(var i = 0; i < args.length; i++) {
 		elementID = args[i];
@@ -145,32 +138,26 @@ secrecy.hideGameElementsExcept = function(elementID) {
 			elementID = elementID.substr(1);
 		}
 		
-		$("#" + elementID).removeClass("d-none");
-		let previous_display = $("#" + elementID).attr("secrecy_display_style");
-		if(previous_display != "none") {
-			$("#" + elementID).css('display', previous_display);
-		} else {
-			$("#" + elementID).css('display', '');
-		}
+		args[i] = elementID;
 	}
+	
+	$(".game-element").each(function() {
+		let id = $(this).attr('id');
+		if(args.includes(id)) {
+			$("#" + id).removeClass("d-none");
+			return;
+		}
+		
+		$("#" + id).addClass("d-none");
+	});
 }
 
 secrecy.fadeOut = function(elementID, callback) {
 	if(elementID.startsWith("#")) {
 		elementID = elementID.substr(1);
 	}
-		
-	$("#" + elementID).removeClass("d-none");
-	
-	let previous_display = $("#" + elementID).attr("secrecy_display_style");
-	if(previous_display === "none") {
-		$("#" + elementID).css('display', '');
-	} else {
-		$("#" + elementID).css('display', previous_display);
-	}	
 	
 	$("#" + elementID).fadeOut(1500, function() {
-		$("#" + elementID).css('display', 'none');
 		$("#" + elementID).addClass("d-none");
 		
 		if(typeof callback == 'function') {
@@ -184,17 +171,9 @@ secrecy.fadeIn = function(elementID, callback) {
 		elementID = elementID.substr(1);
 	}
 		
-	$("#" + elementID).css('display', 'none');
 	$("#" + elementID).removeClass("d-none");
 	
 	$("#" + elementID).fadeIn(1500, function() {
-		let previous_display = $("#" + elementID).attr("secrecy_display_style");
-		if(previous_display === "none") {
-			$("#" + elementID).css('display', '');
-		} else {
-			$("#" + elementID).css('display', previous_display);
-		}	
-		
 		if(typeof callback == 'function') {
 			callback();
 		}
