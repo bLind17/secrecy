@@ -299,14 +299,16 @@ server.onCommand = function(ws, command, params) {
 		return;
 	}
 	
-	if(command == "resetMyID") {
+	if(command == "setMyID") {
 		var newPlayerID = params[0];
 		if(!game.isDeletedPlayerID(newPlayerID)) {
+			console.log("Illegal ID set attempt made by: " + player.playerID + " for ID " + newPlayerID);
 			player.ws.send(utils.createMessage("info", "You are not allowed to do that."));
 			return;
 		}
 		
 		game.resetPlayerID(player, newPlayerID);
+		return;
 	}
 }
 
@@ -327,17 +329,16 @@ server.handleSocketClient = function(ws) {
 			return;
 		}
 						
+		var player = room.getPlayer(playerID);
+		
 		room.playerLeft(playerID);
 		
 		var rs = room.getRoomSocket();
 		if(rs == ws || room.isEmpty()) {
-			game.deleteRoom(room);
-			console.log("[GAME] Deleted: " + room.roomCode);
-			server.writeLog(nodeutil.format("Room %s deleted.", room.roomCode));
-			return;
+			game.notifyRoomEmpty(room);
+			server.writeLog(nodeutil.format("Room %s is now empty.", room.roomCode));
 		}
 
-		var player = room.getPlayer(playerID);
 		if(player == undefined) {
 			return;
 		}

@@ -1,5 +1,25 @@
 var session = {};
 
+/**
+* Checks sessionstorage first, then localStorage
+* retrieves the key value
+* @param key item to retrieve
+* @return string-value or null
+*/
+function getSessionOrLocalStorageItem(key) {
+	var session = sessionStorage.getItem(key);
+	if(session != null) {
+		return session;
+	}
+	
+	return localStorage.getItem(key);
+}
+
+function setSessionAndLocalStorageItem(key, item) {
+	sessionStorage.setItem(key, item);
+	localStorage.setItem(key, item);
+}
+
 function reset(timeout, autoRoom = true) {
 	session = {};
 	session.players = {};
@@ -12,6 +32,14 @@ function reset(timeout, autoRoom = true) {
 				secrecy.sendCommand('create'); // create a room when connecting
 			}
 		} else {
+			var lastID = getSessionOrLocalStorageItem("LastPlayerID");
+			var gameEndedNormally = getSessionOrLocalStorageItem("GameEndedNormally");
+			console.log(gameEndedNormally + " " + lastID);
+			if(gameEndedNormally == "false" && lastID != null) {
+				console.log("Sending old ID");
+				secrecy.sendCommand('setMyID', lastID);
+			}
+			
 			secrecy.hideGameElementsExcept("login");
 			$("#roomCode").hide();
 		}
@@ -146,7 +174,13 @@ secrecy.on("playerJoined", function(params) {
 });
 
 secrecy.on("joined", function(params) {
-	secrecy.setRoomCode(params[0]);
+	var roomCode = params[0];
+	var playerID = params[1];
+	
+	setSessionAndLocalStorageItem("GameEndedNormally", false);
+	setSessionAndLocalStorageItem("LastPlayerID", playerID);
+	
+	secrecy.setRoomCode(roomCode);
 	setInfoText("Welcome!");
 	secrecy.hideGameElementsExcept("roomCode");
 });
@@ -282,6 +316,7 @@ secrecy.on("showScoreCards", function(params) {
 });
 
 secrecy.on("bye", function(params) {
+	sessionStorage.setItem("GameEndedNormally", true);
 	secrecy.showDialog("This is the end.", "Your gamemaster has ended this game. Thanks for playing!");
 });
 
@@ -395,7 +430,7 @@ function removeScoreCards() {
 ///// ON READY
 /////
 $(document).ready(function() {
-	var oldName = localStorage.getItem('name');
+	var oldName = getSessionOrLocalStorageItem('name');
 	if(oldName != undefined) {
 		$("#name").val(oldName);
 	} 
@@ -416,7 +451,7 @@ $(document).ready(function() {
 			return;
 		}
 		
-		localStorage.setItem('name', name);
+		setSessionAndLocalStorageItem('name', name);
 		
 		secrecy.sendCommand("join", roomCode, name);
 	});

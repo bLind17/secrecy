@@ -50,11 +50,11 @@ class Score {
 	* @param playerID player's id
 	*/
 	reactivateDeletedScore(playerID) {
-		if(!hasDeletedScore(playerID)) {
+		if(!this.hasDeletedScore(playerID)) {
 			return;
 		}
 		
-		thie.points[playerID] = this.deletedScores[playerID];
+		this.points[playerID] = this.deletedScores[playerID];
 		delete this.deletedScores[playerID];
 	}
 	
@@ -383,9 +383,11 @@ class Room {
 		
 		if(this.score.hasDeletedScore(playerID)) {
 			this.score.reactivateDeletedScore(playerID);
+			console.log("Reactivating old score for player: " + playerID);
 		} else {
 			var minimum = this.score.getMinimumPoints();
 			this.score.setPoints(playerID, minimum);
+			console.log("Giving player the minimum score: " + playerID);
 		}
 		
 		return player;
@@ -480,9 +482,16 @@ class Game {
 		}
 
 		this.rooms[room.roomCode] = room;
-		
+		this.__attachAutoDeleteTimer(room);
+	};
+	
+	__attachAutoDeleteTimer(room) {
 		var _this = this;
-		setTimeout(function() {
+		if(room.autoDeleteTimeout != undefined) {
+			clearTimeout(room.autoDeleteTimeout);
+		}
+		
+		room.autoDeleteTimeout = setTimeout(function() {
 			if(room.getPlayerCount() == 0) {
 				_this.deleteRoom(room);
 				console.log("[GAME] Room " + room.roomCode + " autodelete.");
@@ -490,16 +499,22 @@ class Game {
 				if(room.roomClosedListener != undefined) {
 					room.roomClosedListener(room, "No players joined.");
 				}
+				
+				delete room.autoDeleteTimeout;
 			}
 		}, 120 * 1000);
-	};
+	}
+	
+	notifyRoomEmpty(room) {
+		this.__attachAutoDeleteTimer(room);
+	}
 	
 	registerPlayer(ws) {
 		if(ws.secGameID == undefined) {
 			var id = uuid.v4();
 			ws.secGameID = id;
 			this.players[id] = new Player(ws, "Hackerman", id);
-			console.log("[GAME] Player registered: " + this.players[id].getName());
+			console.log("[GAME] Player registered: " + this.players[id].getName() + " " + id);
 		}
 	}
 	
@@ -508,15 +523,15 @@ class Game {
 		delete this.players[playerID];
 		delete this.playerRooms[playerID];
 		this.deletedIDs.push(playerID);
-		console.log("[GAME] Player unregistered: " + player.getName());
+		console.log("[GAME] Player unregistered: " + (player == undefined ? "undefined" : player.getName()) + " " + playerID);
 	}
 	
 	isDeletedPlayerID(playerID) {
-		return playerID in this.deletedIDs;
+		return this.deletedIDs.includes(playerID);
 	}
 	
 	resetPlayerID(player, newPlayerID) {
-		if(!isDeletedPlayerID(player.playerID)) {
+		if(!this.isDeletedPlayerID(newPlayerID)) {
 			return;
 		}
 		
@@ -538,10 +553,12 @@ class Game {
 		
 		// update player and socket
 		player.playerID = newPlayerID;
-		ws.secGameID = newPlayerID;
+		player.ws.secGameID = newPlayerID;
 		
-		// remove oldPlayerID from deleted IDs
-		this.deletedIDs.filter(function(element) { return element != oldPlayerID });
+		// remove newPlayerID from deleted IDs
+		this.deletedIDs = this.deletedIDs.filter(function(element) { return element != newPlayerID });
+		
+		console.log("Changed playerID " + oldPlayerID + " -> " + newPlayerID);
 	}
 	
 	getPlayer(playerID) {
@@ -597,7 +614,7 @@ class Game {
 		
 		var rs = room.getRoomSocket();
 		if(rs != undefined && rs.readyState == 1) {
-			rs.send(utils.createMessage("idle", "No players joined within 2 minutes. Deleting room."));
+			rs.send(utils.createMessage("idle", "No players have joined within 2 minutes or all players have left the game. Deleting room."));
 			rs.close();
 		}
 		
