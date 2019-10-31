@@ -41,7 +41,7 @@ function reset(timeout, autoRoom = true) {
 			}
 			
 			secrecy.hideGameElementsExcept("login");
-			$("#roomCode").hide();
+			$("#roomCode").addClass("d-none");
 		}
 	};
 	
@@ -182,7 +182,8 @@ secrecy.on("joined", function(params) {
 	
 	secrecy.setRoomCode(roomCode);
 	setInfoText("Welcome!");
-	secrecy.hideGameElementsExcept("roomCode");
+	secrecy.hideGameElementsExcept();
+	$("#roomCode").removeClass("d-none");
 });
 
 secrecy.on("playerLeft", function(params) {
@@ -267,7 +268,7 @@ secrecy.on("score", function(params) {
 	$("#pointsQuestion").text(params[0]);
 	$("#pointsGame").text(params[1]);
 	$("#correctGuess").text(params[2]);
-    secrecy.hideGameElementsExcept("score");
+    secrecy.hideGameElementsExcept("score", "scoreCardArea");
 });
 
 secrecy.on("newPlayerScore", function(params) {
@@ -282,30 +283,31 @@ secrecy.on("roundEnd", function(params) {
 
 secrecy.on("readyForNewRound", function(params) {
 	if(secrecy.isHost() || session.ruler) {
-		secrecy.hideGameElementsExcept("score", "startRound", "reopen");
+		secrecy.hideGameElementsExcept("score", "scoreCardArea", "startRound", "reopen");
 	} else {
-		secrecy.hideGameElementsExcept("score");
+		secrecy.hideGameElementsExcept("score", "scoreCardArea");
 	}
 	buildPlayerList();
 	setInfoText("");
 });
 
-secrecy.on("collectionDone", function(params) {
-	if(secrecy.isHost()) {
-		showScoreCards(params[0], params[1]);
-		$("#playerList").toggleClass("d-none");
-	}
-	
+secrecy.on("collectionDone", function(params) {	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.hideGameElementsExcept("endRound");
 		setInfoText("Please press the button when everybody is ready to see the answers!");
 	} else {
 		setInfoText("Please wait for the host to reveal the score.");
 	}
+	
+	if(secrecy.isHost()) {
+		showScoreCards(params[0], params[1]);
+		$("#playerList").toggleClass("d-none");
+		secrecy.fadeIn("scoreCardArea");
+	}
 });
 
 secrecy.on("showScoreCards", function(params) {
-	secrecy.hideGameElementsExcept();
+	secrecy.hideGameElementsExcept("scoreCardArea");
 	
 	if(secrecy.isHost()) {
 		revealScoreCards(params[0], function endRoundCallback()
@@ -340,9 +342,9 @@ secrecy.on("exhausted", function(params) {
 });
 
 secrecy.on("started", function(params) {
-	removeScoreCards();
 	session.hasBeenStarted = true;
-	secrecy.hideGameElementsExcept("cancelRound");
+	secrecy.hideGameElementsExcept("cancelRound", "scoreCardArea");
+	secrecy.fadeOut("scoreCardArea", removeScoreCards);
 	hideAllCheckMarks();
 });
 
