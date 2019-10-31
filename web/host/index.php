@@ -38,7 +38,7 @@ include 'functions.php';
 			<h1><div class="spacer" id="roomCode"></div></h1>
 		
 			<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
-			<div id="scoreCardArea" class="spacer"></div>
+			<div id="scoreCardArea" class="row justify-content-center spacer"></div>
 			<table class="table table-striped d-none" id="playerList"></table>
 			<div class="spacer d-none" id="controls">
 				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="startRound" value="Start" />
