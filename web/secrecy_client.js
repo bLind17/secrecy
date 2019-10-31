@@ -421,6 +421,13 @@ function showScoreCards(yesses, noes) {
 	}
 
 	cards = shuffleArray(cards);
+	
+	if(addMoreCardsForTesting != undefined) {
+		for(var i = 0; i < addMoreCardsForTesting; i++) {
+			cards.push(makeCard(undefined, "Hello"));
+		}
+	}
+	
 	for (i = 0; i < cards.length; i++) {
 		cards[i].attr("id", "card-" + i);
 		cards[i].appendTo("#scoreCardArea");
@@ -439,6 +446,11 @@ function shuffleArray(array) {
 }
 
 function revealScoreCards(number_of_cards, callback_function) {
+	if(addMoreCardsForTesting != undefined) {
+		number_of_cards = parseInt(number_of_cards) + addMoreCardsForTesting;
+	}
+	console.log("Got " + number_of_cards + " cards.");
+	
 	revealScoreCard(0, number_of_cards, callback_function)
 
 	// callback after all cards have been revealed

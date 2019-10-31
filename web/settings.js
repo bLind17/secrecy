@@ -6,3 +6,5 @@ var settings = {
 
 // card reveal timeout
 var timeout = 1000 * 1; // 1 seconds
+
+var addMoreCardsForTesting = 5;
