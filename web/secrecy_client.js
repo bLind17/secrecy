@@ -393,13 +393,19 @@ function hideAllCheckMarks() {
 	$(".guessCheck").addClass('d-none');
 }
 
-function makeCard(textFront, textBack) {
+function makeCard(textBack, hexColor) {
 	var card = $("#card-template").clone();
+	/*
 	if(textFront !== undefined) {
 		card.find(".flip-card-front").find(".flip-card-content").text(textFront);
 	}
+	*/
 	if(textBack !== undefined) {
 		card.find(".flip-card-back").find(".flip-card-content").text(textBack);
+	}
+	
+	if(hexColor !== undefined) {
+		card.find(".flip-card-back").css("background-color", hexColor);
 	}
 
 	card.removeClass("d-none");
@@ -412,19 +418,20 @@ function showScoreCards(yesses, noes) {
 
 	// Add yes cards
 	for(var i = 0; i < yesses; i++) {
-		cards.push(makeCard(undefined, "Yes"));
+		cards.push(makeCard("Yes"));
 	}
 	
 	// Add no cards
 	for(var i = 0; i < noes; i++) {
-		cards.push(makeCard(undefined, "No"));
+		cards.push(makeCard("No", "#d94141"));
 	}
 
 	cards = shuffleArray(cards);
 	
-	if(addMoreCardsForTesting != undefined) {
+	if(typeof addMoreCardsForTesting !== 'undefined') {
 		for(var i = 0; i < addMoreCardsForTesting; i++) {
-			cards.push(makeCard(undefined, "Hello"));
+			let yes = Math.random() >= 0.5;
+			cards.push(makeCard(yes ? "Yes" : "No", yes ? undefined : "#d94141"));
 		}
 	}
 	
@@ -446,7 +453,7 @@ function shuffleArray(array) {
 }
 
 function revealScoreCards(number_of_cards, callback_function) {
-	if(addMoreCardsForTesting != undefined) {
+	if(typeof addMoreCardsForTesting !== 'undefined') {
 		number_of_cards = parseInt(number_of_cards) + addMoreCardsForTesting;
 	}
 	
@@ -457,6 +464,7 @@ function revealScoreCard(card_index, number_of_cards, callback_function) {
 	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
 	let next_card = card_index + 1;
 	let next_card_timeout = calculateScoreCardTimeout(timeout, next_card, number_of_cards);
+	console.log(next_card_timeout);
 	if(next_card >= number_of_cards) {
 		setTimeout(callback_function, timeout);
 		return;
@@ -470,20 +478,22 @@ function removeScoreCards() {
 }
 
 function calculateScoreCardTimeout(baseTimeout, index, maxIndex) {
-	if(timeoutSpeedupFactor == undefined) {
-		var timeoutSpeedupFactor = 0.4;
+	var speedUp = 0.4;
+	if(typeof timeoutSpeedupFactor !== 'undefined') {
+		speedUp =  timeoutSpeedupFactor;
 	}
 	
-	if(timout_minimum == undefined) {
-		var timout_minimum = 100;
+	var timeoutMin = 100;
+	if(typeof timeout_minimum !== 'undefined') {
+		timeoutMin = timeout_minimum;
 	}
 	
 	let midPoint = Math.round(maxIndex / 2);
 	let distanceFromMidpoint = Math.abs(midPoint - index);
-	let offsetStep = Math.ceil(baseTimeout * timeoutSpeedupFactor);
+	let offsetStep = Math.ceil(baseTimeout * speedUp);
 	let suggestedTimout = baseTimeout - (midPoint - distanceFromMidpoint) * offsetStep;
 	
-	return Math.max(suggestedTimout, timout_minimum);
+	return Math.max(suggestedTimout, timeoutMin);
 }
 
 /////
