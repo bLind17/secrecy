@@ -274,11 +274,13 @@ secrecy.on("showScoreCards", function(params) {
 	secrecy.hideGameElementsExcept();
 	
 	if(secrecy.isHost()) {
-		setTimeout(revealScoreCards, 1000);	
-		setTimeout(function() {
+		revealScoreCards(params[0], function endRoundCallback()
+		{
+			console.log("on showScoreCards, toggle playerList");
+			$("#playerList").fadeIn("slow");
 			$("#playerList").toggleClass("d-none");
 			secrecy.sendCommand("endround");
-		}, 3000);
+		});
 	}
 });
 
@@ -364,27 +366,57 @@ function makeCard(textFront, textBack) {
 	if(textBack !== undefined) {
 		card.find(".flip-card-back").find(".flip-card-content").text(textBack);
 	}
+
 	card.removeClass("d-none");
 	card.removeAttr("id");
 	return card;
 }
 
-function showScoreCards(yesses, noes) {		
+function showScoreCards(yesses, noes) {
+	var cards = [];
+
 	// Add yes cards
 	for(var i = 0; i < yesses; i++) {
-		var card = makeCard(undefined, "Yes");
-		card.appendTo("#scoreCardArea");
+		cards.push(makeCard(undefined, "Yes"));
 	}
 	
 	// Add no cards
 	for(var i = 0; i < noes; i++) {
-		var card = makeCard(undefined, "No");
-		card.appendTo("#scoreCardArea");
+		cards.push(makeCard(undefined, "No"));
+	}
+
+	cards = shuffleArray(cards);
+	for (i = 0; i < cards.length; i++) {
+		cards[i].attr("id", "card-" + i);
+		cards[i].appendTo("#scoreCardArea");
 	}
 }
 
-function revealScoreCards() {
-	$("#scoreCardArea>.flip-card").toggleClass('flip-card flip-card-flipped');
+function shuffleArray(array) {
+	var arr = array; 
+	for(let i = arr.length - 1; i > 0; i--){
+		const j = Math.floor(Math.random() * i)
+		const temp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+	  }
+	return arr;
+}
+
+function revealScoreCards(number_of_cards, callback_function) {
+	revealScoreCard(0, number_of_cards)
+
+	// callback after all cards have been revealed
+	setTimeout(callback_function, number_of_cards * timeout);
+}
+
+function revealScoreCard(card_index, number_of_cards) {
+	console.log("revealScoreCard: " + card_index);
+	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
+	let next_card = card_index + 1;
+	if(next_card >= number_of_cards)
+		return;
+		setTimeout(revealScoreCard, timeout, next_card, number_of_cards);
 }
 
 function removeScoreCards() {

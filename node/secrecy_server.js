@@ -293,7 +293,7 @@ server.onCommand = function(ws, command, params) {
 		}	
 		
 		var room = game.getPlayerRoom(player.playerID);
-		rs.send(utils.createMessage("showScoreCards"));
+		rs.send(utils.createMessage("showScoreCards", room.getPlayerCount()));
 		room.sendToAll(utils.createMessage("showScoreCards"));
 		return;
 	}
