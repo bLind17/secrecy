@@ -203,6 +203,7 @@ secrecy.on("guess", function(params) {
 	$("#guess").html(guessButtonsHTML);
 	$(".guessNumber").click(function() {
 		secrecy.sendCommand("guess:" + $(this).val());
+		setInfoText("Please wait for the others.")
 	});
 	
 	setInfoText("How many players do you think answered with 'yes'?");
