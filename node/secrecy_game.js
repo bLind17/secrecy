@@ -310,6 +310,18 @@ class Room {
 		}
 	}
 	
+	kickAllPlayers() {
+		this.sendToAll(utils.createMessage("bye"));
+		for(var playerID in this.players) {
+			var player = this.getPlayer(playerID);
+			this.playerLeft(playerID);
+			
+			if(player != undefined) {
+				player.ws.close();
+			}
+		}
+	}
+	
 	startRound() {
 		this.status = this.STATUS_RUNNING;
 		this.question = new Question();

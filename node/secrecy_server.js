@@ -334,7 +334,10 @@ server.handleSocketClient = function(ws) {
 		room.playerLeft(playerID);
 		
 		var rs = room.getRoomSocket();
-		if(rs == ws || room.isEmpty()) {
+		if(rs == ws) {
+			game.deleteRoom(room);
+			server.writeLog(nodeutil.format("Room %s has been deleted.", room.roomCode));
+		} else if(room.isEmpty()) {
 			game.notifyRoomEmpty(room);
 			server.writeLog(nodeutil.format("Room %s is now empty.", room.roomCode));
 		}
