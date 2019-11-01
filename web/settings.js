@@ -5,9 +5,9 @@ var settings = {
 }
 
 // card reveal timeout
-var timeout = 1000 * 1; 			// 1 seconds
-var timeoutSpeedupFactor = 0.2;		// 0.2 times faster with every card
-var timeout_minimum = 1000 * 0.05;	// 0.05 second -> minimum card reveal timeout
+var timeout = 1000 * 1.5; 			// 1 seconds
+var timeoutSpeedupFactor = 0.1;		// 0.2 times faster with every card
+var timeout_minimum = 1000 * 0.2;	// 0.05 second -> minimum card reveal timeout
 
 // adds more cards to the score board. comment out if done testing
 // var addMoreCardsForTesting = 20;
