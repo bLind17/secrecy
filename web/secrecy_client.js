@@ -381,6 +381,9 @@ secrecy.on("reopened", function(params) {
 			
 secrecy.on("ruler", function(params) {
 	session.ruler = true;
+
+	// TODO. Show reveal control once reveal time is available to the client
+	// $(".slider-item").removeClass("d-none");
 	if(session.ongoingRound) {
 		secrecy.hideGameElementsExcept("cancelRound");
 	} else {
@@ -484,7 +487,6 @@ function revealScoreCard(card_index, number_of_cards, callback_function) {
 	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
 	let next_card = card_index + 1;
 	let next_card_timeout = calculateScoreCardTimeout(timeout, next_card, number_of_cards);
-	console.log(next_card_timeout);
 	if(next_card >= number_of_cards) {
 		setTimeout(callback_function, timeout);
 		return;
@@ -579,3 +581,53 @@ $(document).ready(function() {
 	// START
 	reset(0);
 });
+
+function initEnvironment() {
+
+	var darkThemeSelected =
+	  localStorage.getItem("darkSwitch") !== null &&
+	  localStorage.getItem("darkSwitch") === "dark";
+	darkSwitch.checked = darkThemeSelected;
+	if(darkThemeSelected)
+	{ 
+	  $('#darkSwitch').bootstrapToggle('on');
+	  $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
+	}
+	else
+	{
+	  $('#darkSwitch').bootstrapToggle('off');
+	  $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
+	}
+	if(secrecy.isHost()) {
+	  var revealSpeed = localStorage.getItem("revealSpeed")
+	  if(revealSpeed !== null)
+	  {
+		console.log("init env:");
+		changeRevealSpeed (revealSpeed);
+		$('#speedSlider').slider('setValue', revealSpeed);
+	  }
+	}
+  }
+  
+  function changeEnvironment() {
+	if ($('#darkSwitch').prop('checked')) {
+	  $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
+	  localStorage.setItem("darkSwitch", "dark");
+	} else {
+	  $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
+	  localStorage.removeItem("darkSwitch");
+	}
+  
+	if(secrecy.isHost()) {
+	  let revealSpeed = $('#speedSlider').slider('getValue');
+	  localStorage.setItem("revealSpeed", revealSpeed);
+	  console.log("change env:");
+	  changeRevealSpeed (revealSpeed);
+	}
+  }
+  
+  function changeRevealSpeed (revealSpeed) {
+	$(".flip-card-inner").css({transition: 'transform ' + revealSpeed + 's linear'});
+	timeout = 1000 * revealSpeed;
+	console.log(revealSpeed);
+  }

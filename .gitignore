@@ -12,3 +12,7 @@ node/.htaccess
 web/settings.js
 
 logs.txt
+
+node/node_modules/bootstrap-slider/
+
+node/node_modules/bootstrap-toggle/

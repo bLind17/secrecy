@@ -9,6 +9,9 @@
 	<script src="./js/jquery-3.4.1.min.js"></script>
 	<script src="./js/jquery-ui.min.js"></script>
 	<script src="./js/bootstrap.js"></script>
+	<script>$.fn.slider = null</script>
+	<script src="./js/bootstrap-slider.min.js"></script>
+	<script src="./js/bootstrap-toggle.min.js"></script>
 
 	<link rel="shortcut icon" href="./img/favicon.ico">
 	
@@ -16,9 +19,9 @@
 		var css_folder = "./css/";
 	</script>
 	<link href="./css/bootstrap.css" id="theme-sheet" rel="stylesheet" type="text/css">
-
+	<link href="./css/bootstrap-toggle.min.css" rel="stylesheet">
 	<link href="./css/style.css" rel="stylesheet">
-	<link href="./css/dark-mode.css" rel="stylesheet">
+	<link href="./css/bootstrap-slider.min.css" rel="stylesheet">
 	
 	<script src="./settings.js"></script>
 	<script src="./secrecy.js"></script>
@@ -66,25 +69,40 @@
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
-	<div class="collapse navbar-collapse" id="navbarCollapse">
-		<ul class="navbar-nav mr-auto">
-		<li class="nav-item">
-				<a class="nav-link" href="./host" target="_blank">Host Room</a>
-		</li>
-		<li class="nav-item dropup">
-			<a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
-			<div class="dropdown-menu" aria-labelledby="dropdown10">
-			<div class="dropdown-item">
-				<div class="custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="darkSwitch" />
-					<label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+					<a class="nav-link" href="./host" target="_blank">Host Room</a>
+			</li>
+			<li class="nav-item dropup">
+				<a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+				<div class="dropdown-menu" aria-labelledby="dropdown10">
+					<div class="switch-item align-middle text-center">
+						<input type="checkbox" data-toggle="toggle" id="darkSwitch">
+						<label class="dropdown-label">Dark Mode</label>
+					</div>
+					<div class="slider-item d-none">
+					<hr>
+					<label>Reveal Speed</label>
+					<br>
+					<input
+						type="text"
+						name="somename"
+						data-provide="slider"
+						data-slider-ticks="[2.2, 1.4, 0.6]"
+						data-slider-ticks-labels='["fast", "normal", "slow"]'
+						data-slider-min="0.6"
+						data-slider-max="2.2"
+						data-slider-step="0.8"
+						data-slider-value="1.4"
+						data-slider-tooltip="hide"
+						id="speedSlider"
+					>	
+					</div>
 				</div>
-				<script src="./js/dark-mode-switch.js"></script>
-			</div>
-			</div>
-		</li>
-		</ul>
-	</div>
+			</li>
+			</ul>
+		</div>
 	</nav>
 
 	<!-- Modal -->
@@ -110,8 +128,15 @@
 </body>
 
 <script>
-	
+	$('#darkSwitch').bootstrapToggle();
 
+	$( document ).ready(function() {
+		initEnvironment();
+
+		$('#darkSwitch').change(function() {
+			changeEnvironment();
+		});
+	});
 </script>
 
 </html>
