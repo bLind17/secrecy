@@ -354,7 +354,7 @@ secrecy.on("started", function(params) {
 	session.hasBeenStarted = true;
 	secrecy.hideGameElementsExcept("cancelRound");
 	
-	setHostInfoText("<b>" + params[0] + "</b>, please choose a question and ready it out loud. All of you will then answer that question, using the buttons on your devices!");
+	setHostInfoText("<b>" + params[0] + "</b>, please choose a question and ready it out loud. <br> All of you will then answer that question, using the buttons on your devices!");
 	secrecy.fadeIn("hostInfoText", 1000);
 });
 

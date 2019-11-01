@@ -21,3 +21,18 @@ In that directory, run the following commands:
     npm install express
     npm install uuid
 ```
+
+
+**TODOs**
+
+* Reveal Speed @Settings
+* Questioning Player ~~random~~ round robin
+* Guess Button Alignment
+* Test & Adapt Layout on various screen sizes
+* test scrolling on phone
+
+**The Future may be bright**
+
+* Crown Icon for Gamehost
+* Another Icon for Questioning Player
+* Configurable point target for rounds
