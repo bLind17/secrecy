@@ -417,11 +417,11 @@ function makeCard(textBack, hexColor) {
 	var card = $("#card-template").clone();
 	/*
 	if(textFront !== undefined) {
-		card.find(".flip-card-front").find(".flip-card-content").text(textFront);
+		card.find(".flip-card-front").text(textFront);
 	}
 	*/
 	if(textBack !== undefined) {
-		card.find(".flip-card-back").find(".flip-card-content").text(textBack);
+		card.find(".flip-card-back").text(textBack);
 	}
 	
 	if(hexColor !== undefined) {

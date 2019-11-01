@@ -103,16 +103,12 @@ include 'functions.php';
 	
 	<!-- Card Template -->
 	<div id="card-template" class="flip-card d-none">
-		<div class="flip-card-inner card">
+		<div class="flip-card-inner">
 			<div class="flip-card-front card-body">
-				<div class="flip-card-content">
-					<img src="../img/secrecy_1000.png"/>
-				</div>
+				<img src="../img/secrecy_1000.png"/>
 			</div>
-			<div class="flip-card-back card-body">
-				<div class="flip-card-content">
-					Bye
-				</div>
+			<div class="flip-card-back card-body" >
+				Bye
 			</div>
 		</div>
 	</div>
