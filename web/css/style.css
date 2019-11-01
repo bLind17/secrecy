@@ -3,6 +3,11 @@
 	margin-bottom: 40px;
 }
 
+.spacer-sm {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
 .btn-xl {
     padding: 1rem 1.5rem;
     font-size: 2rem;

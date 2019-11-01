@@ -140,9 +140,14 @@ server.onCommand = function(ws, command, params) {
 			return;
 		}
 		
+		
 		room.startRound();
-		rs.send(utils.createMessage("started"));
+		
+		var turnPlayer = room.getRandomPlayer();
+		rs.send(utils.createMessage("started", turnPlayer.getName()));
+		
 		room.sendToAll(utils.createMessage("collect"));
+		
 		return;
 	}
 	
@@ -274,6 +279,7 @@ server.onCommand = function(ws, command, params) {
 		
 		room.question = undefined;
 		
+		rs.send(utils.createMessage("score", 0, 0, correct));
 		rs.send(utils.createMessage("readyForNewRound"));
 		room.sendToAll(utils.createMessage("readyForNewRound"));
 		

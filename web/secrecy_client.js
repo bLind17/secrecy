@@ -24,7 +24,7 @@ function reset(timeout, autoRoom = true) {
 	session = {};
 	session.players = {};
 	
-	setInfoText("");
+	setPlayerInfoText("");
 	
 	secrecy.onWsOpen = function () {
 		if(secrecy.isHost()) {
@@ -158,8 +158,12 @@ function showRoundStartDialog() {
 	secrecy.showDialog("Not enough players", "You should not play this game with less than 3 people. Are you sure you want to play anyway?", startRound, "Yes", "No");
 }
 
-function setInfoText(text) {
+function setPlayerInfoText(text) {
 	$("#infoText").text(text);
+}
+
+function setHostInfoText(text) {
+	$("#hostInfoText").html(text);
 }
 
 secrecy.on("created", function(params) {
@@ -181,7 +185,7 @@ secrecy.on("joined", function(params) {
 	setSessionAndLocalStorageItem("LastPlayerID", playerID);
 	
 	secrecy.setRoomCode(roomCode);
-	setInfoText("Welcome!");
+	setPlayerInfoText("Welcome!");
 	secrecy.hideGameElementsExcept();
 	$("#roomCode").removeClass("d-none");
 });
@@ -194,7 +198,7 @@ secrecy.on("collect", function(params) {
 	session.hasBeenStarted = true;
 	session.ongoingRound = true;
 
-	setInfoText("Please answer the question truthfully.");
+	setPlayerInfoText("Please answer the question truthfully.");
 	
 	if(session.ruler){
 		secrecy.hideGameElementsExcept("yesNo", "cancelRound");
@@ -238,10 +242,10 @@ secrecy.on("guess", function(params) {
 	$("#guess").html(guessButtonsHTML);
 	$(".guessNumber").click(function() {
 		secrecy.sendCommand("guess:" + $(this).val());
-		setInfoText("Please wait for the others.")
+		setPlayerInfoText("Please wait for the others.")
 	});
 	
-	setInfoText("How many players do you think answered with 'yes'?");
+	setPlayerInfoText("How many players do you think answered with 'yes'?");
 	
 	if(session.ruler){
 		secrecy.hideGameElementsExcept("guess", "cancelRound");
@@ -282,27 +286,34 @@ secrecy.on("roundEnd", function(params) {
 });
 
 secrecy.on("readyForNewRound", function(params) {
+	secrecy.hideGameElementsExcept();
+	
+	secrecy.fadeIn("playerList");
+	secrecy.fadeIn("score");
+	
 	if(secrecy.isHost() || session.ruler) {
-		secrecy.hideGameElementsExcept("score", "scoreCardArea", "startRound", "reopen");
+		secrecy.fadeIn("startRound");
+		secrecy.fadeIn("reopen");
+		//secrecy.hideGameElementsExcept("score", "scoreCardArea", "startRound", "reopen");
 	} else {
-		secrecy.hideGameElementsExcept("score", "scoreCardArea");
+		//secrecy.hideGameElementsExcept("score", "scoreCardArea");
 	}
 	buildPlayerList();
-	setInfoText("");
+	setPlayerInfoText("");
 });
 
 secrecy.on("collectionDone", function(params) {	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.hideGameElementsExcept("endRound", "scoreCardArea");
-		setInfoText("Please press the button when everybody is ready to see the answers!");
+		setPlayerInfoText("Please press the button when everybody is ready to see the answers!");
 	} else {
-		setInfoText("Please wait for the host to reveal the score.");
+		setPlayerInfoText("Please wait for the host to reveal the score.");
 	}
 	
 	if(secrecy.isHost()) {
 		showScoreCards(params[0], params[1]);
 		$("#playerList").toggleClass("d-none");
-		secrecy.fadeIn("scoreCardArea");
+		secrecy.fadeIn("scoreCardArea", 1000);
 	}
 });
 
@@ -313,9 +324,7 @@ secrecy.on("showScoreCards", function(params) {
 		revealScoreCards(params[0], function endRoundCallback()
 		{
 			console.log("on showScoreCards, toggle playerList");
-			$("#playerList").fadeIn("slow");
-			$("#playerList").toggleClass("d-none");
-			secrecy.sendCommand("endround");
+			showCorrectAnswer();
 		});
 	}
 });
@@ -343,9 +352,10 @@ secrecy.on("exhausted", function(params) {
 
 secrecy.on("started", function(params) {
 	session.hasBeenStarted = true;
-	secrecy.hideGameElementsExcept("cancelRound", "scoreCardArea");
-	secrecy.fadeOut("scoreCardArea", removeScoreCards);
-	hideAllCheckMarks();
+	secrecy.hideGameElementsExcept("cancelRound");
+	
+	setHostInfoText("<b>" + params[0] + "</b>, please choose a question and ready it out loud. All of you will then answer that question, using the buttons on your devices!");
+	secrecy.fadeIn("hostInfoText", 1000);
 });
 
 secrecy.on("cancelled", function(params) {
@@ -366,7 +376,7 @@ secrecy.on("reopened", function(params) {
 		hideAllCheckMarks();
 	}
 	
-	setInfoText("Other players may join now.");
+	setPlayerInfoText("Other players may join now.");
 });
 			
 secrecy.on("ruler", function(params) {
@@ -389,6 +399,14 @@ secrecy.on("rulerInfo", function(params) {
 			break;
 	}
 });
+
+function showCorrectAnswer() {
+	secrecy.fadeOut("scoreCardArea", 1500, function() {
+		removeScoreCards();
+		hideAllCheckMarks();
+		secrecy.sendCommand("endround");
+	});
+}
 
 function hideAllCheckMarks() {
 	$(".collectCheck").addClass('d-none');

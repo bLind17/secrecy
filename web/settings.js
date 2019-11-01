@@ -10,4 +10,4 @@ var timeoutSpeedupFactor = 0.2;		// 0.2 times faster with every card
 var timeout_minimum = 1000 * 0.05;	// 0.05 second -> minimum card reveal timeout
 
 // adds more cards to the score board. comment out if done testing
-// var addMoreCardsForTesting = 20;
+ //var addMoreCardsForTesting = 3;
