@@ -42,12 +42,12 @@ include 'functions.php';
 		
 			<div id="roomCodeInformation" class="game-element spacer alert alert-info">Go to <a href="../" class="alert-link"><?php echo getGameURL() ?></a> on your <i class="fas fa-mobile-alt alert-link"></i> to join this game!</div>
 			<div id="hostInfoText" class="game-element spacer alert alert-warning d-none"></div>
+			<div id="scoreCardArea" class="row justify-content-center spacer game-element col-lg-10 col-xl-8 offset-lg-1 offset-xl-2" style="display: none"></div>
 			<div id="score" class="game-element d-none" >
 				<div id="roundScore" class="spacer">
 					<p id="scoreAnswer">The correct answer is: <span class="badge badge-primary" id="correctGuess">0</span></p>
 				</div>
 			</div>
-			<div id="scoreCardArea" class="row justify-content-center spacer game-element col-lg-10 col-xl-8 offset-lg-1 offset-xl-2" style="display: none"></div>
 			<table class="table table-striped d-none" id="playerList"></table>
 			<div class="spacer d-none" id="controls">
 				<input type="button" class="game-element d-none btn btn-lg btn-primary" id="startRound" value="Start" />

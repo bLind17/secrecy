@@ -153,12 +153,12 @@ secrecy.hideGameElementsExcept = function(elementID) {
 }
 
 secrecy.fadeOut = function(elementID, duration = 1500, callback) {
-	if(elementID.startsWith("#")) {
-		elementID = elementID.substr(1);
+	if(!elementID.startsWith("#") && !elementID.startsWith(".")) {
+		elementID = "#" + elementID;
 	}
 	
-	$("#" + elementID).fadeOut(duration, function() {
-		$("#" + elementID).addClass("d-none");
+	$(elementID).fadeOut(duration, function() {
+		$(elementID).addClass("d-none");
 		
 		if(typeof callback == 'function') {
 			callback();
@@ -167,13 +167,13 @@ secrecy.fadeOut = function(elementID, duration = 1500, callback) {
 }
 
 secrecy.fadeIn = function(elementID, duration = 1500, callback) {
-	if(elementID.startsWith("#")) {
-		elementID = elementID.substr(1);
+	if(!elementID.startsWith("#") && !elementID.startsWith(".")) {
+		elementID = "#" + elementID;
 	}
 		
-	$("#" + elementID).removeClass("d-none");
+	$(elementID).removeClass("d-none");
 	
-	$("#" + elementID).fadeIn(duration, function() {
+	$(elementID).fadeIn(duration, function() {
 		if(typeof callback == 'function') {
 			callback();
 		}

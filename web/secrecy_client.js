@@ -289,7 +289,6 @@ secrecy.on("readyForNewRound", function(params) {
 	secrecy.hideGameElementsExcept();
 	
 	secrecy.fadeIn("playerList");
-	secrecy.fadeIn("score");
 	
 	if(secrecy.isHost() || session.ruler) {
 		secrecy.fadeIn("startRound");
@@ -321,6 +320,7 @@ secrecy.on("showScoreCards", function(params) {
 	secrecy.hideGameElementsExcept("scoreCardArea");
 	
 	if(secrecy.isHost()) {
+		secrecy.fadeIn("score");
 		revealScoreCards(params[0], function endRoundCallback()
 		{
 			console.log("on showScoreCards, toggle playerList");
@@ -404,10 +404,11 @@ secrecy.on("rulerInfo", function(params) {
 });
 
 function showCorrectAnswer() {
-	secrecy.fadeOut("scoreCardArea", 1500, function() {
-		removeScoreCards();
+	secrecy.fadeOut(".No-Card", 1500, function() {
+		removeNoCards();
 		hideAllCheckMarks();
 		secrecy.sendCommand("endround");
+		setTimeout(removeScoreCards, 2000);
 	});
 }
 
@@ -425,6 +426,10 @@ function makeCard(textBack, hexColor) {
 	*/
 	if(textBack !== undefined) {
 		card.find(".flip-card-back").text(textBack);
+		if(textBack == "Yes")
+			card.addClass("Yes-Card");
+		else
+			card.addClass("No-Card");
 	}
 	
 	if(hexColor !== undefined) {
@@ -485,6 +490,8 @@ function revealScoreCards(number_of_cards, callback_function) {
 
 function revealScoreCard(card_index, number_of_cards, callback_function) {
 	$("#card-" + card_index).toggleClass('flip-card flip-card-flipped');
+	if($("#card-" + card_index).hasClass("Yes-Card"))
+		$("#correctGuess").text(parseInt($("#correctGuess").text()) + 1);
 	let next_card = card_index + 1;
 	let next_card_timeout = calculateScoreCardTimeout(timeout, next_card, number_of_cards);
 	if(next_card >= number_of_cards) {
@@ -492,6 +499,10 @@ function revealScoreCard(card_index, number_of_cards, callback_function) {
 		return;
 	}
 	setTimeout(revealScoreCard, next_card_timeout, next_card, number_of_cards, callback_function);
+}
+
+function removeNoCards() {
+	$(".No-Cards").remove();
 }
 
 function removeScoreCards() {
