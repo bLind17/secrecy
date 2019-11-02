@@ -583,50 +583,69 @@ $(document).ready(function() {
 });
 
 function initEnvironment() {
+	document.addEventListener('keydown', function(event) {
+		// 1,2,3 Keys pressed
+		if (event.keyCode >= 49 && event.keyCode <= 51) {
+			let min = $('#speedSlider').slider('getAttribute', 'min');
+			let step = $('#speedSlider').slider('getAttribute', 'step');
+			revealSpeed = min + (51 - event.keyCode) * step;
+			$('#speedSlider').slider('setValue', revealSpeed);
+			changeRevealSpeed (revealSpeed);
+	
+		}
+		// Num 1,2,3 Keys pressed
+		else if (event.keyCode >= 97 && event.keyCode <= 99) {
+			let min = $('#speedSlider').slider('getAttribute', 'min');
+			let step = $('#speedSlider').slider('getAttribute', 'step');
+			revealSpeed = min + (99 - event.keyCode) * step;
+			$('#speedSlider').slider('setValue', revealSpeed);
+			changeRevealSpeed (revealSpeed);
+		}
+	}, true);
 
 	var darkThemeSelected =
-	  localStorage.getItem("darkSwitch") !== null &&
-	  localStorage.getItem("darkSwitch") === "dark";
+		localStorage.getItem("darkSwitch") !== null &&
+		localStorage.getItem("darkSwitch") === "dark";
 	darkSwitch.checked = darkThemeSelected;
 	if(darkThemeSelected)
 	{ 
-	  $('#darkSwitch').bootstrapToggle('on');
-	  $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
+		$('#darkSwitch').bootstrapToggle('on');
+		$('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
 	}
 	else
 	{
-	  $('#darkSwitch').bootstrapToggle('off');
-	  $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
+		$('#darkSwitch').bootstrapToggle('off');
+		$('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
 	}
 	if(secrecy.isHost()) {
-	  var revealSpeed = localStorage.getItem("revealSpeed")
-	  if(revealSpeed !== null)
-	  {
-		console.log("init env:");
-		changeRevealSpeed (revealSpeed);
-		$('#speedSlider').slider('setValue', revealSpeed);
-	  }
+		var revealSpeed = localStorage.getItem("revealSpeed")
+		if(revealSpeed !== null)
+		{
+			console.log("init env:");
+			changeRevealSpeed (revealSpeed);
+			$('#speedSlider').slider('setValue', revealSpeed);
+		}
 	}
   }
   
   function changeEnvironment() {
 	if ($('#darkSwitch').prop('checked')) {
-	  $('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
-	  localStorage.setItem("darkSwitch", "dark");
+		$('#theme-sheet').attr({ href: css_folder + "bootstrap_dark.css" });
+		localStorage.setItem("darkSwitch", "dark");
 	} else {
-	  $('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
-	  localStorage.removeItem("darkSwitch");
+		$('#theme-sheet').attr({ href: css_folder + "bootstrap.css" });
+		localStorage.removeItem("darkSwitch");
 	}
   
 	if(secrecy.isHost()) {
-	  let revealSpeed = $('#speedSlider').slider('getValue');
-	  localStorage.setItem("revealSpeed", revealSpeed);
-	  console.log("change env:");
-	  changeRevealSpeed (revealSpeed);
+		console.log("change env:");
+		let revealSpeed = $('#speedSlider').slider('getValue');
+		changeRevealSpeed (revealSpeed);
 	}
   }
   
   function changeRevealSpeed (revealSpeed) {
+	localStorage.setItem("revealSpeed", revealSpeed);
 	$(".flip-card-inner").css({transition: 'transform ' + revealSpeed + 's linear'});
 	timeout = 1000 * revealSpeed;
 	console.log(revealSpeed);
